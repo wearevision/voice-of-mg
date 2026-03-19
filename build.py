@@ -224,6 +224,56 @@ document.addEventListener('keydown', function(e){
   }
 });
 
+// ── MODERATOR CAROUSEL ──
+(function(){
+  var track = document.getElementById('mod-track');
+  var dots = document.getElementById('mod-dots');
+  var prev = document.getElementById('mod-prev');
+  var next = document.getElementById('mod-next');
+  if(!track || !dots) return;
+
+  var slides = track.querySelectorAll('.mod-slide');
+  var dotEls = dots.querySelectorAll('.mod-dot');
+  var current = 0;
+  var total = slides.length;
+
+  function goTo(idx){
+    if(idx < 0) idx = total - 1;
+    if(idx >= total) idx = 0;
+    current = idx;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    for(var i = 0; i < slides.length; i++){
+      slides[i].classList.toggle('active', i === current);
+    }
+    for(var j = 0; j < dotEls.length; j++){
+      dotEls[j].classList.toggle('active', j === current);
+    }
+  }
+
+  if(prev) prev.addEventListener('click', function(){ goTo(current - 1); });
+  if(next) next.addEventListener('click', function(){ goTo(current + 1); });
+  dots.addEventListener('click', function(e){
+    var dot = e.target.closest('.mod-dot');
+    if(!dot) return;
+    goTo(parseInt(dot.getAttribute('data-mod'), 10));
+  });
+
+  // Auto-advance every 6s
+  var autoTimer = setInterval(function(){ goTo(current + 1); }, 6000);
+  track.addEventListener('mouseenter', function(){ clearInterval(autoTimer); });
+  track.addEventListener('mouseleave', function(){
+    autoTimer = setInterval(function(){ goTo(current + 1); }, 6000);
+  });
+
+  // Touch swipe
+  var startX = 0;
+  track.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; clearInterval(autoTimer); }, {passive:true});
+  track.addEventListener('touchend', function(e){
+    var diff = startX - e.changedTouches[0].clientX;
+    if(Math.abs(diff) > 50){ goTo(diff > 0 ? current + 1 : current - 1); }
+  }, {passive:true});
+})();
+
 // ── MOBILE NAV HAMBURGER ──
 (function(){
   var toggle = document.getElementById('nav-toggle');
