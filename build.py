@@ -157,11 +157,55 @@ def fix_modals(modals_dict):
 def build_js():
     """Build clean JavaScript with all fixes per CONTEXT.md."""
     return """
+// ── PRELOADER ──
+window.addEventListener('load', function(){
+  var pre = document.getElementById('preloader');
+  if(pre){ setTimeout(function(){ pre.classList.add('done'); }, 300); }
+});
+
 // ── PROGRESS BAR ──
 window.addEventListener('scroll', function(){
   var p = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
   document.getElementById('prog').style.width = p + '%';
 });
+
+// ── SCROLL INDICATOR (side dots) ──
+(function(){
+  var sections = document.querySelectorAll('section[id]');
+  if(sections.length === 0) return;
+  var indicator = document.createElement('div');
+  indicator.className = 'scroll-indicator';
+  indicator.id = 'scroll-indicator';
+  for(var i = 0; i < sections.length; i++){
+    var dot = document.createElement('div');
+    dot.className = 'scroll-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('data-idx', i);
+    dot.title = sections[i].id;
+    indicator.appendChild(dot);
+  }
+  document.body.appendChild(indicator);
+
+  var dots = indicator.querySelectorAll('.scroll-dot');
+  indicator.addEventListener('click', function(e){
+    var dot = e.target.closest('.scroll-dot');
+    if(!dot) return;
+    var idx = parseInt(dot.getAttribute('data-idx'), 10);
+    if(sections[idx]) sections[idx].scrollIntoView({behavior:'smooth'});
+  });
+
+  // Update on scroll
+  var currentSection = 0;
+  sections.forEach(function(s, idx){
+    new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          currentSection = idx;
+          dots.forEach(function(d, j){ d.classList.toggle('active', j === idx); });
+        }
+      });
+    }, {threshold: 0.3}).observe(s);
+  });
+})();
 
 // ── NAV ACTIVE STATE ──
 document.querySelectorAll('section[id]').forEach(function(s){
@@ -182,6 +226,26 @@ document.querySelectorAll('.anim').forEach(function(el){
   new IntersectionObserver(function(entries){
     entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('in'); });
   }, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'}).observe(el);
+});
+
+// ── COUNT-UP ANIMATION ──
+document.querySelectorAll('.counter-num[data-count]').forEach(function(el){
+  new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var target = parseInt(el.getAttribute('data-count'), 10);
+      var duration = 1200;
+      var start = performance.now();
+      function tick(now){
+        var elapsed = now - start;
+        var progress = Math.min(elapsed / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        el.textContent = Math.round(target * eased);
+        if(progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }, {threshold: 0.5}).observe(el);
 });
 
 // ── MODALS — event delegation, scroll lock on body + documentElement ──
@@ -507,6 +571,7 @@ def build():
 </style>
 </head>
 <body>
+<div class="preloader" id="preloader"><div class="preloader-logo">WAV<span style="color:var(--red)">·</span>BTL</div></div>
 {sections_html}
 {modals_html}
 <script>{js}</script>
