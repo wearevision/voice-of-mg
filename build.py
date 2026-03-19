@@ -336,11 +336,17 @@ def build():
     font_css = build_font_faces()
     raw_css = read_file(ASSETS / "styles.css")
     sections_html = read_file(ASSETS / "sections.html")
+    dashboard_html = read_file(ASSETS / "dashboard_mockup.html")
     modals_raw = json.loads((ASSETS / "modals_data.json").read_text())
 
     # 2. Apply fixes
     css = fix_css(raw_css)
     sections_html = fix_sections(sections_html)
+    # Insert dashboard mockup before comparativa section
+    sections_html = sections_html.replace(
+        '<!-- ═══ SLIDE 13 — COMPARATIVA ROI',
+        dashboard_html + '\n<!-- ═══ SLIDE 13 — COMPARATIVA ROI'
+    )
     modals = fix_modals(modals_raw)
     js = build_js()
 
