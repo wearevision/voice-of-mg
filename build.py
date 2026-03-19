@@ -13,6 +13,7 @@ Critical fixes applied:
 
 import json
 import re
+import shutil
 from pathlib import Path
 
 BASE = Path(__file__).parent
@@ -393,6 +394,14 @@ def build():
     OUTPUT.mkdir(exist_ok=True)
     out_path = OUTPUT / "index.html"
     out_path.write_text(html, encoding="utf-8")
+
+    # 6. Copy background images to output
+    bg_src = ASSETS / "bg_photos"
+    bg_dst = OUTPUT / "img"
+    if bg_src.exists():
+        bg_dst.mkdir(exist_ok=True)
+        for img in bg_src.glob("*.jpg"):
+            shutil.copy2(img, bg_dst / img.name)
 
     # Stats
     size_kb = out_path.stat().st_size / 1024
