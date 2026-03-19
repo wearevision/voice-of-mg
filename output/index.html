@@ -984,14 +984,14 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
   <div style="max-width:1100px;margin:0 auto">
 
     <!-- Header -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px" class="anim">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;flex-wrap:wrap;gap:12px" class="anim">
       <div>
         <div style="font-family:var(--mono);font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--smoke);margin-bottom:8px">Vista previa · Dashboard WAV Intelligence</div>
         <div style="font-weight:700;font-size:clamp(20px,2.5vw,30px);color:white;line-height:1.15">Así se ve tu <span style="font-family:var(--script);color:var(--smoke);font-size:1.3em">inteligencia</span></div>
       </div>
       <div style="display:flex;gap:6px;align-items:center">
         <div style="width:8px;height:8px;border-radius:50%;background:#4CAF78"></div>
-        <span style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:#4CAF78;text-transform:uppercase">Sesión activa · Marzo 2026</span>
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:#4CAF78;text-transform:uppercase">Sesión real · Enero 2026 · Day 2 PM</span>
       </div>
     </div>
 
@@ -1004,245 +1004,683 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
           <div style="width:22px;height:22px;background:var(--red);border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:7px;color:white;font-weight:700">MG</div>
           <span style="font-family:var(--mono);font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.6)">WAV INTELLIGENCE</span>
         </div>
-        <div style="display:flex;gap:16px">
-          <span class="dash-tab dash-tab-active">Sesión</span>
-          <span class="dash-tab">Perfiles</span>
-          <span class="dash-tab">Tendencias</span>
-          <span class="dash-tab">Exportar</span>
+        <div style="display:flex;gap:4px" id="dash-tabs">
+          <span class="dash-tab dash-tab-active" data-tab="sesion">Sesión</span>
+          <span class="dash-tab" data-tab="perfiles">Perfiles</span>
+          <span class="dash-tab" data-tab="tendencias">Tendencias</span>
+          <span class="dash-tab" data-tab="exportar">Exportar</span>
         </div>
       </div>
 
-      <!-- PANEL 1: Video + Timeline -->
-      <div class="dash-video-panel">
-        <!-- Video placeholder -->
-        <div class="dash-video">
-          <div class="dash-video-gradient"></div>
-          <div class="dash-video-overlay">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div style="width:40px;height:40px;border:2px solid rgba(255,255,255,.6);border-radius:50%;display:flex;align-items:center;justify-content:center">
-                <div style="width:0;height:0;border-left:14px solid rgba(255,255,255,.8);border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px"></div>
+      <!-- ══ PANEL: Sesión ══ -->
+      <div id="dash-panel-sesion">
+
+        <!-- Video + Timeline -->
+        <div class="dash-video-panel">
+          <!-- Video placeholder -->
+          <div class="dash-video">
+            <div class="dash-video-gradient"></div>
+            <div class="dash-video-overlay">
+              <div style="flex:1">
+                <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:4px">Video sesión · Enero 2026 · Day 2 PM</div>
+                <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-transform:uppercase">8 participantes · Sesión completa 2h 10min</div>
               </div>
-              <div>
-                <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase">Video 360° · Sesión Marzo</div>
-                <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">Sub-sesión 2 · Mesa desayuno · 10 participantes</div>
+              <div style="width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+                <div style="width:0;height:0;border-style:solid;border-width:8px 0 8px 14px;border-color:transparent transparent transparent rgba(255,255,255,.6);margin-left:3px"></div>
+              </div>
+              <div style="flex:1;text-align:right">
+                <div id="dash-video-time" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:rgba(255,255,255,.5)">0:02:08 / 2:10:23</div>
               </div>
             </div>
-            <div style="font-family:var(--mono);font-size:20px;color:rgba(255,255,255,.5);letter-spacing:2px">23:14 <span style="font-size:11px;color:rgba(255,255,255,.25)">/ 1:42:30</span></div>
+          </div>
+
+          <div class="dash-timeline">
+            <div class="dash-tl-bar">
+              <div class="dash-tl-progress" id="dash-tl-progress" style="width:4%"></div>
+              <div id="dash-tl-markers"></div>
+            </div>
+            <div class="dash-tl-labels">
+              <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:#4CAF78"></div>Marca</div>
+              <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:#4CAF78"></div>Diseño</div>
+              <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:#F5A623"></div>Precio</div>
+              <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:var(--smoke)"></div>Infotainment</div>
+              <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:#5B8DEF"></div>Postventa</div>
+              <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:var(--smoke)"></div>Seguridad</div>
+            </div>
+          </div>
+
+          <!-- Current speaker card -->
+          <div class="dash-speaker" id="dash-speaker">
+            <div class="dash-speaker-av" id="dash-speaker-av">SM</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;color:white" id="dash-speaker-name">Sergio Martinez <span style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:rgba(255,255,255,.35);margin-left:6px">ZS Trophy · 0:02:08</span></div>
+              <div style="font-size:12px;color:rgba(255,255,255,.55);font-style:italic;margin-top:3px;line-height:1.5" id="dash-speaker-quote">"La idea es escucharlos, conocerlos, tomar acción."</div>
+              <div style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:rgba(255,255,255,.25);text-transform:uppercase;margin-top:6px" id="dash-speaker-topic">Intro · marca</div>
+            </div>
+            <div class="dash-sentiment dash-sentiment-pos" id="dash-speaker-sent">Positivo</div>
           </div>
         </div>
 
-        <!-- Timeline -->
-        <div class="dash-timeline">
-          <div class="dash-tl-bar">
-            <div class="dash-tl-progress" style="width:22%"></div>
-            <div class="dash-tl-marker" style="left:8%" title="Infotainment"><div class="dash-tl-dot" style="background:var(--smoke)"></div></div>
-            <div class="dash-tl-marker" style="left:15%" title="Diseño"><div class="dash-tl-dot" style="background:#4CAF78"></div></div>
-            <div class="dash-tl-marker dash-tl-marker-active" style="left:22%" title="Infotainment"><div class="dash-tl-dot" style="background:var(--smoke)"></div></div>
-            <div class="dash-tl-marker" style="left:38%" title="Garantía"><div class="dash-tl-dot" style="background:#5B8DEF"></div></div>
-            <div class="dash-tl-marker" style="left:52%" title="Precio"><div class="dash-tl-dot" style="background:#F5A623"></div></div>
-            <div class="dash-tl-marker" style="left:61%" title="Comunidad"><div class="dash-tl-dot" style="background:#4CAF78"></div></div>
-            <div class="dash-tl-marker" style="left:75%" title="Precio"><div class="dash-tl-dot" style="background:#F5A623"></div></div>
-            <div class="dash-tl-marker" style="left:88%" title="Garantía"><div class="dash-tl-dot" style="background:#5B8DEF"></div></div>
-          </div>
-          <div class="dash-tl-labels">
-            <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:var(--smoke)"></div>Infotainment</div>
-            <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:#5B8DEF"></div>Garantía</div>
-            <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:#F5A623"></div>Precio</div>
-            <div class="dash-tl-label"><div class="dash-tl-ldot" style="background:#4CAF78"></div>Comunidad</div>
-          </div>
-        </div>
+        <!-- Lower: Search + Mini Profiles -->
+        <div class="dash-lower">
 
-        <!-- Current speaker -->
-        <div class="dash-speaker">
-          <div class="dash-speaker-av">FG</div>
-          <div>
-            <div style="font-size:13px;font-weight:600;color:white">Felipe García <span style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:rgba(255,255,255,.35);margin-left:6px">ZS EV · 38 AÑOS · 23:14</span></div>
-            <div style="font-size:12px;color:rgba(255,255,255,.55);font-style:italic;margin-top:3px;line-height:1.5">"El infotainment se congela cuando enciendo el aire acondicionado. Llevo 3 veces al service y me dicen que es normal."</div>
-          </div>
-          <div class="dash-sentiment dash-sentiment-neg">Negativo</div>
-        </div>
-      </div>
-
-      <!-- PANELS 2 & 3: Search + Profiles side by side -->
-      <div class="dash-lower">
-
-        <!-- PANEL 2: Semantic Search -->
-        <div class="dash-search-panel">
-          <div class="dash-panel-label">Búsqueda semántica</div>
-          <div class="dash-search-input">
-            <span style="color:rgba(255,255,255,.25)">🔍</span>
-            <span style="color:rgba(255,255,255,.5);font-size:12px">¿Qué dijeron sobre el infotainment?</span>
-          </div>
-          <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.25);text-transform:uppercase;margin:10px 0 8px">3 resultados · 4 participantes</div>
-
-          <!-- Result 1 -->
-          <div class="dash-result">
-            <div class="dash-result-av" style="background:var(--smoke)">FG</div>
-            <div class="dash-result-body">
-              <div class="dash-result-meta">Felipe García · ZS EV · 38a · <span style="color:var(--smoke)">23:14</span></div>
-              <div class="dash-result-quote">"Se congela cuando enciendo el aire. Llevo 3 veces al service."</div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-                <div class="dash-sentiment dash-sentiment-neg" style="font-size:7px">Negativo</div>
-                <span style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke)">VER EN VIDEO →</span>
-              </div>
+          <!-- Semantic Search -->
+          <div class="dash-search-panel">
+            <div class="dash-panel-label">Búsqueda semántica</div>
+            <div class="dash-search-input" style="cursor:text">
+              <span style="color:rgba(255,255,255,.25)">🔍</span>
+              <input type="text" id="dash-search" placeholder="Buscar en verbatims... (ej: pantalla, motor, precio)" style="background:none;border:none;outline:none;color:rgba(255,255,255,.7);font-size:12px;font-family:var(--sans);width:100%">
             </div>
+            <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.25);text-transform:uppercase;margin:10px 0 8px" id="dash-search-count">Mostrando 5 verbatims</div>
+            <div id="dash-search-results"></div>
           </div>
 
-          <!-- Result 2 -->
-          <div class="dash-result">
-            <div class="dash-result-av" style="background:#5B8DEF">MT</div>
-            <div class="dash-result-body">
-              <div class="dash-result-meta">María Torres · MG4 · 42a · <span style="color:var(--smoke)">47:22</span></div>
-              <div class="dash-result-quote">"La pantalla es linda pero no responde al toque. Termino usando el teléfono."</div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-                <div class="dash-sentiment dash-sentiment-neg" style="font-size:7px">Negativo</div>
-                <span style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke)">VER EN VIDEO →</span>
-              </div>
-            </div>
+          <!-- Mini Profiles (always visible in Sesion tab) -->
+          <div class="dash-profiles-panel">
+            <div class="dash-panel-label">Participantes · 8 perfiles</div>
+            <div class="dash-profiles-grid" id="dash-mini-profiles"></div>
+            <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-transform:uppercase;margin-top:10px;text-align:center">8 perfiles en esta sesión · 60 por sesión · 240 acumulados al año</div>
           </div>
-
-          <!-- Result 3 -->
-          <div class="dash-result">
-            <div class="dash-result-av" style="background:#4CAF78">VR</div>
-            <div class="dash-result-body">
-              <div class="dash-result-meta">Valentina Rojas · ZS · 31a · <span style="color:var(--smoke)">1:08:45</span></div>
-              <div class="dash-result-quote">"Después de la actualización OTA de febrero mejoró bastante. Ahora sí puedo usar CarPlay."</div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-                <div class="dash-sentiment dash-sentiment-pos" style="font-size:7px">Positivo</div>
-                <span style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke)">VER EN VIDEO →</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PANEL 3: Participant Profiles -->
-        <div class="dash-profiles-panel">
-          <div class="dash-panel-label">Perfiles · Sesión Marzo</div>
-          <div class="dash-filters">
-            <span class="dash-filter dash-filter-active">Todos</span>
-            <span class="dash-filter">ZS</span>
-            <span class="dash-filter">MG4</span>
-            <span class="dash-filter">HS</span>
-          </div>
-          <div class="dash-profiles-grid">
-            <!-- Profile 1 -->
-            <div class="dash-profile-card">
-              <div class="dash-profile-av" style="background:var(--smoke)">FG</div>
-              <div class="dash-profile-name">Felipe García</div>
-              <div class="dash-profile-model">ZS EV · 38 años</div>
-              <div class="dash-profile-stat"><span>12</span> verbatims</div>
-              <div class="dash-profile-bar"><div class="dash-profile-bar-fill" style="width:75%;background:var(--smoke)"></div></div>
-              <div class="dash-profile-sent">Sentimiento: mixto</div>
-            </div>
-            <!-- Profile 2 -->
-            <div class="dash-profile-card">
-              <div class="dash-profile-av" style="background:#5B8DEF">MT</div>
-              <div class="dash-profile-name">María Torres</div>
-              <div class="dash-profile-model">MG4 · 42 años</div>
-              <div class="dash-profile-stat"><span>8</span> verbatims</div>
-              <div class="dash-profile-bar"><div class="dash-profile-bar-fill" style="width:40%;background:#F5A623"></div></div>
-              <div class="dash-profile-sent">Sentimiento: crítico</div>
-            </div>
-            <!-- Profile 3 -->
-            <div class="dash-profile-card">
-              <div class="dash-profile-av" style="background:#F5A623">CM</div>
-              <div class="dash-profile-name">Carlos Mendoza</div>
-              <div class="dash-profile-model">HS PHEV · 55 años</div>
-              <div class="dash-profile-stat"><span>15</span> verbatims</div>
-              <div class="dash-profile-bar"><div class="dash-profile-bar-fill" style="width:60%;background:#5B8DEF"></div></div>
-              <div class="dash-profile-sent">Sentimiento: neutro</div>
-            </div>
-            <!-- Profile 4 -->
-            <div class="dash-profile-card">
-              <div class="dash-profile-av" style="background:#4CAF78">VR</div>
-              <div class="dash-profile-name">Valentina Rojas</div>
-              <div class="dash-profile-model">ZS · 31 años</div>
-              <div class="dash-profile-stat"><span>9</span> verbatims</div>
-              <div class="dash-profile-bar"><div class="dash-profile-bar-fill" style="width:85%;background:#4CAF78"></div></div>
-              <div class="dash-profile-sent">Sentimiento: positivo</div>
-            </div>
-          </div>
-          <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-transform:uppercase;margin-top:10px;text-align:center">60 perfiles en esta sesión · 240 acumulados al año</div>
         </div>
       </div>
 
-      <!-- PANEL 4: Cross-Session Trends -->
-      <div class="dash-trends-panel">
-        <div class="dash-panel-label" style="margin-bottom:16px">Tendencias cross-sesión · 2026</div>
-        <div class="dash-trends-grid">
-          <!-- Metric rows with mini charts -->
-          <div class="dash-trend-row">
-            <div class="dash-trend-label">
-              <div class="dash-trend-name">Satisfacción diseño</div>
-              <div class="dash-trend-change dash-trend-up">+0.7</div>
-            </div>
-            <div class="dash-trend-chart">
-              <div class="dash-trend-points">
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:82%"></div><span>8.2</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:85%"></div><span>8.5</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:87%"></div><span>8.7</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:89%;background:var(--smoke)"></div><span style="color:var(--smoke)">8.9</span></div>
-              </div>
-              <div class="dash-trend-axis">
-                <span>Mar</span><span>Jun</span><span>Sep</span><span>Dic</span>
-              </div>
+      <!-- ══ PANEL: Perfiles ══ -->
+      <div id="dash-panel-perfiles" style="display:none;padding:16px">
+        <div class="dash-panel-label">Perfiles · Day 2 PM · Enero 2026</div>
+        <div class="dash-filters" id="dash-model-filters">
+          <span class="dash-filter dash-filter-active" data-model="todos">Todos</span>
+          <span class="dash-filter" data-model="ZS">ZS</span>
+          <span class="dash-filter" data-model="MG One">MG One</span>
+          <span class="dash-filter" data-model="MG5">MG5</span>
+        </div>
+        <div class="dash-profiles-grid" id="dash-full-profiles" style="grid-template-columns:repeat(4,1fr)"></div>
+        <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-transform:uppercase;margin-top:14px;text-align:center" id="dash-profiles-count">8 perfiles · Todos los modelos</div>
+      </div>
+
+      <!-- ══ PANEL: Tendencias ══ -->
+      <div id="dash-panel-tendencias" style="display:none">
+        <div style="padding:16px">
+          <div class="dash-panel-label" style="margin-bottom:20px">Tendencias cross-sesión · 2026</div>
+
+          <!-- ── LINE CHART: Evolución por tema ── -->
+          <div style="margin-bottom:24px">
+            <div style="font-family:'FavoritMono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:12px">Evolución por tema · 2026</div>
+            <svg id="svg-line-chart" viewBox="0 0 600 280" style="width:100%;max-height:280px;display:block" xmlns="http://www.w3.org/2000/svg">
+              <!-- Grid lines -->
+              <line x1="60" y1="30" x2="560" y2="30" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+              <line x1="60" y1="72" x2="560" y2="72" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+              <line x1="60" y1="114" x2="560" y2="114" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+              <line x1="60" y1="156" x2="560" y2="156" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+              <line x1="60" y1="198" x2="560" y2="198" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+              <line x1="60" y1="240" x2="560" y2="240" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+              <!-- Y axis labels (0-10, chart area y: 30 to 240, so 10=30, 0=240, each unit = 21px) -->
+              <text x="50" y="34" text-anchor="end" fill="rgba(255,255,255,.3)" font-family="'FavoritMono',monospace" font-size="8">10</text>
+              <text x="50" y="76" text-anchor="end" fill="rgba(255,255,255,.3)" font-family="'FavoritMono',monospace" font-size="8">8</text>
+              <text x="50" y="118" text-anchor="end" fill="rgba(255,255,255,.3)" font-family="'FavoritMono',monospace" font-size="8">6</text>
+              <text x="50" y="160" text-anchor="end" fill="rgba(255,255,255,.3)" font-family="'FavoritMono',monospace" font-size="8">4</text>
+              <text x="50" y="202" text-anchor="end" fill="rgba(255,255,255,.3)" font-family="'FavoritMono',monospace" font-size="8">2</text>
+              <text x="50" y="244" text-anchor="end" fill="rgba(255,255,255,.3)" font-family="'FavoritMono',monospace" font-size="8">0</text>
+              <!-- X axis labels -->
+              <text x="127" y="258" text-anchor="middle" fill="rgba(255,255,255,.35)" font-family="'FavoritMono',monospace" font-size="8">Ene</text>
+              <text x="293" y="258" text-anchor="middle" fill="rgba(255,255,255,.35)" font-family="'FavoritMono',monospace" font-size="8">Abr</text>
+              <text x="460" y="258" text-anchor="middle" fill="rgba(255,255,255,.35)" font-family="'FavoritMono',monospace" font-size="8">Jul</text>
+              <text x="560" y="258" text-anchor="middle" fill="rgba(255,255,255,.35)" font-family="'FavoritMono',monospace" font-size="8">Oct</text>
+              <!-- Line: Satisfacción diseño (#4CAF78) 8.2→8.5→8.7→8.9 -->
+              <!-- y = 240 - (val * 21) : 8.2→67.8, 8.5→61.5, 8.7→57.3, 8.9→53.1 -->
+              <polyline points="127,67.8 293,61.5 460,57.3 560,53.1" fill="none" stroke="#4CAF78" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="127" cy="67.8" r="5" fill="#4CAF78" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Satisfacción diseño" data-period="Ene" data-value="8.2" data-explain="Baseline. Confort y techo panorámico son los principales atractivos."/>
+              <circle cx="293" cy="61.5" r="5" fill="#4CAF78" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Satisfacción diseño" data-period="Abr" data-value="8.5" data-explain="Mejora tras campaña de test drive ampliado."/>
+              <circle cx="460" cy="57.3" r="5" fill="#4CAF78" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Satisfacción diseño" data-period="Jul" data-value="8.7" data-explain="Nuevo HS con diseño actualizado impulsa percepción."/>
+              <circle cx="560" cy="53.1" r="5" fill="#4CAF78" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Satisfacción diseño" data-period="Oct" data-value="8.9" data-explain="Consolidación. Diseño es el activo más valorado."/>
+              <!-- Line: Frustración infotainment (#FD2F33) 7.1→6.2→5.3→4.7 -->
+              <!-- y: 7.1→90.9, 6.2→109.8, 5.3→128.7, 4.7→141.3 -->
+              <polyline points="127,90.9 293,109.8 460,128.7 560,141.3" fill="none" stroke="#FD2F33" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="127" cy="90.9" r="5" fill="#FD2F33" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Frustración infotainment" data-period="Ene" data-value="7.1" data-explain="Pico. Pantalla táctil sin controles físicos, reversa bloquea clima."/>
+              <circle cx="293" cy="109.8" r="5" fill="#FD2F33" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Frustración infotainment" data-period="Abr" data-value="6.2" data-explain="Actualización OTA mejora respuesta táctil."/>
+              <circle cx="460" cy="128.7" r="5" fill="#FD2F33" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Frustración infotainment" data-period="Jul" data-value="5.3" data-explain="Nuevo firmware + tutorial en entrega reduce incidentes."/>
+              <circle cx="560" cy="141.3" r="5" fill="#FD2F33" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Frustración infotainment" data-period="Oct" data-value="4.7" data-explain="Contenido. Solo persiste en modelos pre-2025."/>
+              <!-- Line: Confianza postventa (#5B8DEF) 5.2→5.8→6.4→7.0 -->
+              <!-- y: 5.2→130.8, 5.8→118.2, 6.4→105.6, 7.0→93.0 -->
+              <polyline points="127,130.8 293,118.2 460,105.6 560,93.0" fill="none" stroke="#5B8DEF" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="127" cy="130.8" r="5" fill="#5B8DEF" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Confianza postventa" data-period="Ene" data-value="5.2" data-explain="Baseline bajo. Repuestos 15-25 días, manual 400 págs como respuesta."/>
+              <circle cx="293" cy="118.2" r="5" fill="#5B8DEF" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Confianza postventa" data-period="Abr" data-value="5.8" data-explain="Pasaporte de mantenciones implementado."/>
+              <circle cx="460" cy="105.6" r="5" fill="#5B8DEF" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Confianza postventa" data-period="Jul" data-value="6.4" data-explain="Stock repuestos críticos en Chile. Espera baja a 5 días."/>
+              <circle cx="560" cy="93.0" r="5" fill="#5B8DEF" stroke="#080810" stroke-width="2" class="svg-dot" data-metric="Confianza postventa" data-period="Oct" data-value="7.0" data-explain="Programa retención activo. Clientes sienten acompañamiento."/>
+            </svg>
+            <!-- Legend -->
+            <div style="display:flex;gap:20px;justify-content:center;margin-top:10px;flex-wrap:wrap">
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:#4CAF78"></div><span style="font-family:'FavoritMono',monospace;font-size:8px;color:rgba(255,255,255,.5)">Satisfacción diseño</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:#FD2F33"></div><span style="font-family:'FavoritMono',monospace;font-size:8px;color:rgba(255,255,255,.5)">Frustración infotainment</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:#5B8DEF"></div><span style="font-family:'FavoritMono',monospace;font-size:8px;color:rgba(255,255,255,.5)">Confianza postventa</span></div>
             </div>
           </div>
 
-          <div class="dash-trend-row">
-            <div class="dash-trend-label">
-              <div class="dash-trend-name">Frustración infotainment</div>
-              <div class="dash-trend-change dash-trend-down">−3.0</div>
-            </div>
-            <div class="dash-trend-chart">
-              <div class="dash-trend-points">
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:71%;background:var(--smoke)"></div><span>7.1</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:68%;background:var(--smoke)"></div><span>6.8</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:52%;background:#F5A623"></div><span>5.2</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:41%;background:#4CAF78"></div><span style="color:#4CAF78">4.1</span></div>
+          <!-- ── DONUT + HORIZONTAL BARS row ── -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+
+            <!-- DONUT CHART: Distribución de sentimiento -->
+            <div>
+              <div style="font-family:'FavoritMono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:12px">Distribución de sentimiento · Enero 2026</div>
+              <div style="display:flex;align-items:center;gap:16px">
+                <svg id="svg-donut-chart" viewBox="0 0 180 180" style="width:160px;height:160px;flex-shrink:0" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Donut segments: r=70, cx=90, cy=90, circumference=439.82 -->
+                  <!-- Positivo 38% = 167.13, Mixto 27% = 118.75, Negativo 25% = 109.96, Neutro 10% = 43.98 -->
+                  <!-- Offset: start at top (-90deg). stroke-dashoffset rotates the start. -->
+                  <circle cx="90" cy="90" r="70" fill="none" stroke="#4CAF78" stroke-width="28" stroke-dasharray="167.13 272.69" stroke-dashoffset="109.96" class="svg-pie-seg" data-category="Positivo" data-pct="38%"/>
+                  <circle cx="90" cy="90" r="70" fill="none" stroke="#F5A623" stroke-width="28" stroke-dasharray="118.75 321.07" stroke-dashoffset="-57.17" class="svg-pie-seg" data-category="Mixto" data-pct="27%"/>
+                  <circle cx="90" cy="90" r="70" fill="none" stroke="#FD2F33" stroke-width="28" stroke-dasharray="109.96 329.86" stroke-dashoffset="-175.92" class="svg-pie-seg" data-category="Negativo" data-pct="25%"/>
+                  <circle cx="90" cy="90" r="70" fill="none" stroke="#5B8DEF" stroke-width="28" stroke-dasharray="43.98 395.84" stroke-dashoffset="-285.88" class="svg-pie-seg" data-category="Neutro" data-pct="10%"/>
+                  <!-- Center text -->
+                  <text x="90" y="85" text-anchor="middle" fill="white" font-family="'Favorit',sans-serif" font-size="16" font-weight="700">114</text>
+                  <text x="90" y="102" text-anchor="middle" fill="rgba(255,255,255,.4)" font-family="'FavoritMono',monospace" font-size="8">verbatims</text>
+                </svg>
+                <!-- Donut legend -->
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;align-items:center;gap:8px"><div style="width:10px;height:10px;border-radius:2px;background:#4CAF78;flex-shrink:0"></div><span style="font-family:'Favorit',sans-serif;font-size:12px;color:rgba(255,255,255,.7)">38%</span><span style="font-family:'FavoritMono',monospace;font-size:8px;color:rgba(255,255,255,.4)">Positivo</span></div>
+                  <div style="display:flex;align-items:center;gap:8px"><div style="width:10px;height:10px;border-radius:2px;background:#F5A623;flex-shrink:0"></div><span style="font-family:'Favorit',sans-serif;font-size:12px;color:rgba(255,255,255,.7)">27%</span><span style="font-family:'FavoritMono',monospace;font-size:8px;color:rgba(255,255,255,.4)">Mixto</span></div>
+                  <div style="display:flex;align-items:center;gap:8px"><div style="width:10px;height:10px;border-radius:2px;background:#FD2F33;flex-shrink:0"></div><span style="font-family:'Favorit',sans-serif;font-size:12px;color:rgba(255,255,255,.7)">25%</span><span style="font-family:'FavoritMono',monospace;font-size:8px;color:rgba(255,255,255,.4)">Negativo</span></div>
+                  <div style="display:flex;align-items:center;gap:8px"><div style="width:10px;height:10px;border-radius:2px;background:#5B8DEF;flex-shrink:0"></div><span style="font-family:'Favorit',sans-serif;font-size:12px;color:rgba(255,255,255,.7)">10%</span><span style="font-family:'FavoritMono',monospace;font-size:8px;color:rgba(255,255,255,.4)">Neutro</span></div>
+                </div>
               </div>
-              <div class="dash-trend-axis">
-                <span>Mar</span><span>Jun</span><span>Sep</span><span>Dic</span>
-              </div>
             </div>
+
+            <!-- HORIZONTAL BAR CHART: Temas más mencionados -->
+            <div>
+              <div style="font-family:'FavoritMono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:12px">Temas más mencionados</div>
+              <svg id="svg-hbar-chart" viewBox="0 0 340 190" style="width:100%;display:block" xmlns="http://www.w3.org/2000/svg">
+                <!-- Bar 1: Infotainment/Pantalla 28 -->
+                <text x="130" y="18" text-anchor="end" fill="rgba(255,255,255,.6)" font-family="'FavoritMono',monospace" font-size="9">Infotainment/Pantalla</text>
+                <rect x="136" y="8" width="160" height="14" rx="2" fill="#FD2F33" opacity="0.85"/>
+                <text x="302" y="19" fill="rgba(255,255,255,.7)" font-family="'Favorit',sans-serif" font-size="10" font-weight="600">28</text>
+                <!-- Bar 2: Precio/Depreciación 22 -->
+                <text x="130" y="48" text-anchor="end" fill="rgba(255,255,255,.6)" font-family="'FavoritMono',monospace" font-size="9">Precio/Depreciación</text>
+                <rect x="136" y="38" width="126" height="14" rx="2" fill="#F5A623" opacity="0.85"/>
+                <text x="268" y="49" fill="rgba(255,255,255,.7)" font-family="'Favorit',sans-serif" font-size="10" font-weight="600">22</text>
+                <!-- Bar 3: Postventa/Garantía 18 -->
+                <text x="130" y="78" text-anchor="end" fill="rgba(255,255,255,.6)" font-family="'FavoritMono',monospace" font-size="9">Postventa/Garantía</text>
+                <rect x="136" y="68" width="103" height="14" rx="2" fill="#5B8DEF" opacity="0.85"/>
+                <text x="245" y="79" fill="rgba(255,255,255,.7)" font-family="'Favorit',sans-serif" font-size="10" font-weight="600">18</text>
+                <!-- Bar 4: Diseño/Confort 16 -->
+                <text x="130" y="108" text-anchor="end" fill="rgba(255,255,255,.6)" font-family="'FavoritMono',monospace" font-size="9">Diseño/Confort</text>
+                <rect x="136" y="98" width="91" height="14" rx="2" fill="#4CAF78" opacity="0.85"/>
+                <text x="233" y="109" fill="rgba(255,255,255,.7)" font-family="'Favorit',sans-serif" font-size="10" font-weight="600">16</text>
+                <!-- Bar 5: Seguridad/Alarma 14 -->
+                <text x="130" y="138" text-anchor="end" fill="rgba(255,255,255,.6)" font-family="'FavoritMono',monospace" font-size="9">Seguridad/Alarma</text>
+                <rect x="136" y="128" width="80" height="14" rx="2" fill="#FD2F33" opacity="0.55"/>
+                <text x="222" y="139" fill="rgba(255,255,255,.7)" font-family="'Favorit',sans-serif" font-size="10" font-weight="600">14</text>
+                <!-- Bar 6: Marca/Heritage 12 -->
+                <text x="130" y="168" text-anchor="end" fill="rgba(255,255,255,.6)" font-family="'FavoritMono',monospace" font-size="9">Marca/Heritage</text>
+                <rect x="136" y="158" width="69" height="14" rx="2" fill="#4CAF78" opacity="0.55"/>
+                <text x="211" y="169" fill="rgba(255,255,255,.7)" font-family="'Favorit',sans-serif" font-size="10" font-weight="600">12</text>
+              </svg>
+            </div>
+
           </div>
 
-          <div class="dash-trend-row">
-            <div class="dash-trend-label">
-              <div class="dash-trend-name">NPS</div>
-              <div class="dash-trend-change dash-trend-up">+19</div>
-            </div>
-            <div class="dash-trend-chart">
-              <div class="dash-trend-points">
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:42%"></div><span>42</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:48%"></div><span>48</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:56%"></div><span>56</span></div>
-                <div class="dash-trend-col"><div class="dash-trend-val" style="height:61%;background:#4CAF78"></div><span style="color:#4CAF78">61</span></div>
-              </div>
-              <div class="dash-trend-axis">
-                <span>Mar</span><span>Jun</span><span>Sep</span><span>Dic</span>
-              </div>
+          <!-- Emerging theme -->
+          <div class="dash-emerging">
+            <div class="dash-emerging-dot"></div>
+            <div>
+              <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:2px">Tema emergente · Enero 2026</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.7)">"Depreciación + bonos opacos" — 5 de 8 participantes mencionaron frustración con caída de precio post-compra y falta de transparencia en financiamiento. No fue preguntado directamente.</div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Emerging theme badge -->
-        <div class="dash-emerging">
-          <div class="dash-emerging-dot"></div>
-          <div>
-            <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:2px">Tema emergente · Septiembre 2026</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.7)">"Carga en edificios" — mencionado por 8 de 60 participantes sin ser preguntado. No existía en sesiones anteriores.</div>
+      <!-- ══ PANEL: Exportar ══ -->
+      <div id="dash-panel-exportar" style="display:none;padding:32px 16px">
+        <div class="dash-panel-label" style="margin-bottom:20px">Exportar datos de sesión</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:600px">
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:20px;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(160,0,34,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+            <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:8px">Reporte PDF</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">Informe ejecutivo con verbatims, perfiles y tendencias. Formato cliente.</div>
+            <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-transform:uppercase;margin-top:12px">↓ Descargar</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:20px;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(160,0,34,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+            <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:8px">Datos CSV</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">Verbatims, sentimiento, tags y timestamps en formato tabular.</div>
+            <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-transform:uppercase;margin-top:12px">↓ Descargar</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:20px;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(160,0,34,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+            <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:8px">Clips de video</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">Momentos clave editados con subtítulos y contexto.</div>
+            <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-transform:uppercase;margin-top:12px">↓ Descargar</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:20px;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(160,0,34,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+            <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:8px">Presentación PPT</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.5">Deck ejecutivo listo para presentar a gerencia MG.</div>
+            <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.2);text-transform:uppercase;margin-top:12px">↓ Descargar</div>
           </div>
         </div>
+        <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.15);text-transform:uppercase;margin-top:20px">Mockup · Los exports se generan automáticamente post-sesión</div>
       </div>
 
     </div><!-- /dash-frame -->
 
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="dash-profile-modal">
+      <div class="modal-box" id="dash-profile-modal-content">
+        <button class="modal-close" data-close>Cerrar</button>
+        <div id="dash-modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Trend Tooltip -->
+    <div id="dash-tooltip" style="position:fixed;display:none;background:rgba(10,10,10,.95);border:1px solid rgba(160,0,34,.3);padding:10px 14px;border-radius:4px;z-index:9998;max-width:280px;pointer-events:none"></div>
+
     <!-- Bottom note -->
-    <div style="margin-top:20px;font-family:var(--mono);font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.15);text-transform:uppercase;text-align:center" class="anim anim-d2">Mockup ilustrativo · El dashboard real se construye sobre los datos de cada sesión</div>
+    <div style="margin-top:20px;font-family:var(--mono);font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.15);text-transform:uppercase;text-align:center" class="anim anim-d2">Datos reales de sesión enero 2026 · Tendencias proyectadas · El dashboard completo se construye con las 4 sesiones del año</div>
 
   </div>
 </section>
+<script>
+(function(){
+  /* ── DATA ── */
+  var PARTICIPANTS = [
+    {id:'SM', name:'Sergio Martinez', model:'ZS Trophy', age:42, verbatims:18, sentiment:'mixto', color:'#FD2F33', sentPct:55, sentColor:'#F5A623', gender:'M', family:'Casado, 2 hijos (5 años)', job:'Ingeniero industrial, telecomunicaciones'},
+    {id:'DC', name:'Daisy Córdova', model:'ZS EV', age:38, verbatims:14, sentiment:'positivo', color:'#4CAF78', sentPct:82, sentColor:'#4CAF78', gender:'F', family:'Casada, 1 hijo', job:'Gerente cervecería artesanal'},
+    {id:'CU', name:'César Ulloa', model:'MG One', age:45, verbatims:16, sentiment:'crítico', color:'#F5A623', sentPct:45, sentColor:'#FD2F33', gender:'M', family:'Casado, 3 hijos', job:'Empresario, negocios internacionales'},
+    {id:'JF', name:'Jacob Faustin', model:'MG5', age:35, verbatims:8, sentiment:'positivo', color:'#4CAF78', sentPct:75, sentColor:'#4CAF78', gender:'M', family:'Soltero', job:'Ingeniero en Hotel Mandarin Oriental'},
+    {id:'JC', name:'Juan Carlos Pinar', model:'ZS', age:50, verbatims:12, sentiment:'mixto', color:'#5B8DEF', sentPct:50, sentColor:'#F5A623', gender:'M', family:'Casado, 2 hijos', job:'Área ventas automotriz'},
+    {id:'YV', name:'Yaritza Vidal', model:'ZS EV', age:33, verbatims:10, sentiment:'negativo', color:'#FD2F33', sentPct:30, sentColor:'#FD2F33', gender:'F', family:'Soltera', job:'Coordinadora logística'},
+    {id:'JL', name:'Jacqueline Contreras', model:'MG5', age:40, verbatims:9, sentiment:'negativo', color:'#FD2F33', sentPct:35, sentColor:'#FD2F33', gender:'F', family:'Casada, 1 hija', job:'Administrativa sector salud'},
+    {id:'SM2', name:'Saray Meza', model:'MG One', age:36, verbatims:7, sentiment:'positivo', color:'#4CAF78', sentPct:78, sentColor:'#4CAF78', gender:'F', family:'En pareja', job:'Diseñadora gráfica freelance'}
+  ];
+
+  var THEME_COLORS = {
+    marca:'#4CAF78', 'diseño':'#4CAF78', precio:'#F5A623',
+    infotainment:'#FD2F33', postventa:'#5B8DEF', seguridad:'#FD2F33', rendimiento:'#4CAF78'
+  };
+
+  var KEYPOINTS = [
+    {pct:4, topic:'Intro', theme:'marca', speaker:'SM', quote:'La idea es escucharlos, conocerlos, tomar acción.', time:'0:02:08', sentiment:'pos'},
+    {pct:12, topic:'Descubrimiento', theme:'marca', speaker:'CU', quote:'De todos los chinos que podría comprar, el único que compraría es MG. Una marca antigua de casi cien años.', time:'0:13:58', sentiment:'pos'},
+    {pct:18, topic:'Confort', theme:'diseño', speaker:'SM', quote:'Lo que más me gustó fue el confort. Lo probé en la automotora y anda rico, se siente sólido. Ese fue mi punto de entrada.', time:'0:32:08', sentiment:'pos'},
+    {pct:25, topic:'Techo panorámico', theme:'diseño', speaker:'CU', quote:'No encuentro top todavía el techo panorámico... me encantan los autos con techo panorámico.', time:'0:14:51', sentiment:'pos'},
+    {pct:32, topic:'Depreciación', theme:'precio', speaker:'SM', quote:'Me lo compré y hace tres meses el auto estaba 1 millón de pesos más barato. Eso me juega contra.', time:'1:54:15', sentiment:'neg'},
+    {pct:40, topic:'Bonos opacos', theme:'precio', speaker:'SM', quote:'Te marean tanto con bonos, no sabes cuánto vale el auto de verdad. Ese es como un amarre.', time:'0:59:41', sentiment:'neg'},
+    {pct:48, topic:'Motor 1.5T', theme:'rendimiento', speaker:'SM', quote:'A nivel de motor me ha impresionado el 1.5 turbo. No lo esperaba.', time:'0:09:30', sentiment:'pos'},
+    {pct:54, topic:'Pantalla reversa', theme:'infotainment', speaker:'JC', quote:'Meto reversa y no puedo cambiar el aire. La pantalla desaparece y aunque apreté el botón no funciona.', time:'1:14:21', sentiment:'neg'},
+    {pct:60, topic:'Todo táctil', theme:'infotainment', speaker:'CU', quote:'Lo cambié por la pantalla porque encontré que era muy táctil. Sé que uno se acostumbra, pero igual.', time:'2:03:09', sentiment:'neg'},
+    {pct:65, topic:'Android Auto', theme:'infotainment', speaker:'SM', quote:'No me funcionaba el Android Auto. Me dijeron que el problema es el cable.', time:'1:23:10', sentiment:'neg'},
+    {pct:72, topic:'Manual 400 pgs', theme:'postventa', speaker:'YV', quote:'¿Qué va la mantención? "Véalo en el manual"... un manual como de 400 hojas.', time:'1:25:14', sentiment:'neg'},
+    {pct:78, topic:'Alarma', theme:'seguridad', speaker:'JL', quote:'La alarma debería venir incluida. Tuve que pagar adicional. Una amiga salió de la concesionaria y le saltaron el auto.', time:'1:30:26', sentiment:'neg'},
+    {pct:84, topic:'Servicio excelente', theme:'postventa', speaker:'DC', quote:'Cada vez que llevaba el auto me lo entregan impecable. Un lavado perfecto. Era otro auto.', time:'1:20:30', sentiment:'pos'},
+    {pct:90, topic:'Lealtad', theme:'marca', speaker:'DC', quote:'Desde mi experiencia siempre hablo bien. Mi marca me sostiene. A la gente le gusta eso.', time:'2:06:21', sentiment:'pos'},
+    {pct:96, topic:'Recomendaría', theme:'marca', speaker:'YV', quote:'Sí lo recomendaría 100%. Lo único que podría mejorar es la estabilidad, pero más allá de eso no tengo problema.', time:'2:01:00', sentiment:'pos'}
+  ];
+
+  var VERBATIMS = [
+    {speaker:'JC', quote:'Meto reversa y no puedo cambiar el aire. La pantalla desaparece.', time:'1:14:21', sentiment:'neg', tags:['pantalla','infotainment','reversa','aire']},
+    {speaker:'CU', quote:'Lo cambié por la pantalla porque era muy táctil. Al final uno se acostumbra, pero igual.', time:'2:03:09', sentiment:'neg', tags:['pantalla','táctil','infotainment']},
+    {speaker:'SM', quote:'No me funcionaba el Android Auto. Me dijeron que el problema es el cable.', time:'1:23:10', sentiment:'neg', tags:['android','carplay','conectividad','infotainment']},
+    {speaker:'YV', quote:'¿Qué va la mantención? Véalo en el manual... un manual como de 400 hojas.', time:'1:25:14', sentiment:'neg', tags:['mantención','postventa','manual','servicio']},
+    {speaker:'JL', quote:'La alarma debería venir incluida. Tuve que pagar adicional.', time:'1:30:26', sentiment:'neg', tags:['alarma','seguridad','precio','incluido']},
+    {speaker:'DC', quote:'Cada vez que llevaba el auto me lo entregan impecable. Un lavado perfecto.', time:'1:20:30', sentiment:'pos', tags:['servicio','postventa','mantención','excelente']},
+    {speaker:'SM', quote:'A nivel de motor me ha impresionado el 1.5 turbo. No lo esperaba.', time:'0:09:30', sentiment:'pos', tags:['motor','rendimiento','turbo','potencia']},
+    {speaker:'CU', quote:'De todos los chinos, el único que compraría es MG. Una marca antigua de casi cien años.', time:'0:13:58', sentiment:'pos', tags:['marca','heritage','china','historia']},
+    {speaker:'SM', quote:'Lo probé en la automotora y anda rico. Se siente sólido. Ese fue mi punto de entrada.', time:'0:32:08', sentiment:'pos', tags:['confort','diseño','test drive','compra']},
+    {speaker:'DC', quote:'No tiene nada que envidiarle a otra marca. El diseño, la amplitud, es súper amplio.', time:'0:29:02', sentiment:'pos', tags:['diseño','amplitud','competencia']},
+    {speaker:'SM', quote:'Te marean con bonos. No sabes cuánto vale el auto de verdad.', time:'0:59:41', sentiment:'neg', tags:['precio','bonos','financiamiento','transparencia']},
+    {speaker:'SM', quote:'Me lo compré y tres meses después estaba 1 millón más barato. Eso me juega contra.', time:'1:54:15', sentiment:'neg', tags:['depreciación','precio','valor','reventa']},
+    {speaker:'JF', quote:'Bueno, bonito y barato. Tres palabras para describir MG.', time:'0:19:52', sentiment:'pos', tags:['valor','precio','marca','percepción']},
+    {speaker:'CU', quote:'Me encantan los autos con techo panorámico. No encuentro top todavía.', time:'0:14:51', sentiment:'pos', tags:['diseño','techo','panorámico','confort']},
+    {speaker:'DC', quote:'Siempre hablo bien de MG. Mi marca me sostiene. Soy yo contra cinco compañeras escépticas.', time:'2:06:21', sentiment:'pos', tags:['lealtad','marca','advocacy','comunidad']},
+    {speaker:'YV', quote:'Sí lo recomendaría 100%. Solo mejorar la estabilidad, pero más allá de eso bien.', time:'2:01:00', sentiment:'pos', tags:['recomendación','estabilidad','satisfacción']},
+    {speaker:'JL', quote:'El botón de encendido no me dejaba arrancar. Me decía que no detectaba la llave.', time:'0:25:56', sentiment:'neg', tags:['encendido','llave','falla','arranque']},
+    {speaker:'SM', quote:'Contamos más de diez MG pegados subiendo a Portillo. Abandonados en la subida.', time:'0:09:54', sentiment:'neg', tags:['portillo','nieve','altura','problema']},
+    {speaker:'SM2', quote:'El control de descenso es terrible. Frena a puro tirones. Suena feo, muy brusco.', time:'0:24:00', sentiment:'neg', tags:['descenso','frenos','control','problema']},
+    {speaker:'DC', quote:'Le pedí honestidad al vendedor porque pagaba al contado. Me dio esa sugerencia y nunca se me olvidó.', time:'0:57:27', sentiment:'pos', tags:['compra','honestidad','vendedor','confianza']}
+  ];
+
+  /* ── HELPERS ── */
+  var pMap = {};
+  var i;
+  for (i = 0; i < PARTICIPANTS.length; i++) {
+    pMap[PARTICIPANTS[i].id] = PARTICIPANTS[i];
+  }
+
+  function getParticipant(id) {
+    return pMap[id] || {id:id, name:id, model:'', age:0, color:'#888'};
+  }
+
+  function sentLabel(s) {
+    if (s === 'pos') return 'Positivo';
+    if (s === 'neg') return 'Negativo';
+    return 'Neutro';
+  }
+
+  function sentClass(s) {
+    if (s === 'pos') return 'dash-sentiment-pos';
+    if (s === 'neg') return 'dash-sentiment-neg';
+    return '';
+  }
+
+  function matchesModel(pModel, filter) {
+    if (filter === 'todos') return true;
+    if (filter === 'ZS') return pModel.indexOf('ZS') === 0;
+    return pModel === filter;
+  }
+
+  /* ── TIMELINE MARKERS ── */
+  var markersEl = document.getElementById('dash-tl-markers');
+  var progressEl = document.getElementById('dash-tl-progress');
+  var activeKP = 0;
+
+  function renderMarkers() {
+    var html = '';
+    for (i = 0; i < KEYPOINTS.length; i++) {
+      var kp = KEYPOINTS[i];
+      var color = THEME_COLORS[kp.theme] || '#888';
+      var activeClass = i === activeKP ? ' dash-tl-marker-active' : '';
+      html += '<div class="dash-tl-marker' + activeClass + '" style="left:' + kp.pct + '%;cursor:pointer" data-kpi="' + i + '" title="' + kp.topic + '">';
+      html += '<div class="dash-tl-dot" style="background:' + color + '"></div>';
+      html += '</div>';
+    }
+    markersEl.innerHTML = html;
+  }
+
+  function selectKeypoint(idx) {
+    if (idx < 0 || idx >= KEYPOINTS.length) return;
+    activeKP = idx;
+    var kp = KEYPOINTS[idx];
+    var p = getParticipant(kp.speaker);
+
+    progressEl.style.width = kp.pct + '%';
+
+    var videoTimeEl = document.getElementById('dash-video-time');
+    if (videoTimeEl) videoTimeEl.textContent = kp.time + ' / 2:10:23';
+
+    var avEl = document.getElementById('dash-speaker-av');
+    avEl.textContent = p.id;
+    avEl.style.background = p.color;
+
+    document.getElementById('dash-speaker-name').innerHTML = p.name + ' <span style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:rgba(255,255,255,.35);margin-left:6px">' + p.model + ' · ' + kp.time + '</span>';
+    document.getElementById('dash-speaker-quote').textContent = '\u201C' + kp.quote + '\u201D';
+    document.getElementById('dash-speaker-topic').textContent = kp.topic + ' · ' + kp.theme;
+
+    var sentEl = document.getElementById('dash-speaker-sent');
+    sentEl.textContent = sentLabel(kp.sentiment);
+    sentEl.className = 'dash-sentiment ' + sentClass(kp.sentiment);
+
+    renderMarkers();
+  }
+
+  renderMarkers();
+
+  /* Event delegation for timeline dots */
+  markersEl.addEventListener('click', function(e) {
+    var marker = e.target.closest('.dash-tl-marker');
+    if (!marker) return;
+    var idx = parseInt(marker.getAttribute('data-kpi'), 10);
+    selectKeypoint(idx);
+  });
+
+  /* ── TABS ── */
+  var tabsEl = document.getElementById('dash-tabs');
+  var panelIds = ['sesion', 'perfiles', 'tendencias', 'exportar'];
+
+  tabsEl.addEventListener('click', function(e) {
+    var tab = e.target.closest('.dash-tab');
+    if (!tab) return;
+    var target = tab.getAttribute('data-tab');
+    if (!target) return;
+
+    var tabs = tabsEl.querySelectorAll('.dash-tab');
+    for (i = 0; i < tabs.length; i++) {
+      tabs[i].className = 'dash-tab' + (tabs[i].getAttribute('data-tab') === target ? ' dash-tab-active' : '');
+    }
+
+    for (i = 0; i < panelIds.length; i++) {
+      var panel = document.getElementById('dash-panel-' + panelIds[i]);
+      if (panel) panel.style.display = panelIds[i] === target ? '' : 'none';
+    }
+  });
+
+  /* ── SEARCH ── */
+  var searchInput = document.getElementById('dash-search');
+  var searchResults = document.getElementById('dash-search-results');
+  var searchCount = document.getElementById('dash-search-count');
+
+  function normalize(str) {
+    return str.toLowerCase().replace(/[áà]/g,'a').replace(/[éè]/g,'e').replace(/[íì]/g,'i').replace(/[óò]/g,'o').replace(/[úù]/g,'u').replace(/ñ/g,'n');
+  }
+
+  function renderVerbatim(v) {
+    var p = getParticipant(v.speaker);
+    var sentText = v.sentiment === 'pos' ? 'Positivo' : (v.sentiment === 'neg' ? 'Negativo' : 'Neutro');
+    var sentCls = v.sentiment === 'pos' ? 'dash-sentiment-pos' : (v.sentiment === 'neg' ? 'dash-sentiment-neg' : '');
+    var html = '<div class="dash-result">';
+    html += '<div class="dash-result-av" style="background:' + p.color + '">' + p.id + '</div>';
+    html += '<div class="dash-result-body">';
+    html += '<div class="dash-result-meta">' + p.name + ' · ' + p.model + ' · <span style="color:var(--smoke)">' + v.time + '</span></div>';
+    html += '<div class="dash-result-quote">\u201C' + v.quote + '\u201D</div>';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">';
+    html += '<div class="dash-sentiment ' + sentCls + '" style="font-size:7px">' + sentText + '</div>';
+    html += '<span style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke);cursor:pointer">VER EN VIDEO →</span>';
+    html += '</div></div></div>';
+    return html;
+  }
+
+  function doSearch() {
+    var q = normalize(searchInput.value.trim());
+    var results = [];
+    var j, k;
+
+    if (q === '') {
+      for (j = 0; j < VERBATIMS.length && j < 5; j++) {
+        results.push(VERBATIMS[j]);
+      }
+    } else {
+      var terms = q.split(/\s+/);
+      for (j = 0; j < VERBATIMS.length; j++) {
+        var v = VERBATIMS[j];
+        var haystack = normalize(v.quote + ' ' + v.tags.join(' '));
+        var matched = true;
+        for (k = 0; k < terms.length; k++) {
+          if (haystack.indexOf(terms[k]) === -1) { matched = false; break; }
+        }
+        if (matched) results.push(v);
+      }
+    }
+
+    var html = '';
+    for (j = 0; j < results.length; j++) {
+      html += renderVerbatim(results[j]);
+    }
+
+    if (results.length === 0) {
+      html = '<div style="font-size:11px;color:rgba(255,255,255,.3);padding:12px 0;font-style:italic">Sin resultados para \u201C' + searchInput.value + '\u201D</div>';
+    }
+
+    searchResults.innerHTML = html;
+
+    var speakers = {};
+    for (j = 0; j < results.length; j++) speakers[results[j].speaker] = true;
+    var nSpeakers = 0;
+    for (k in speakers) { if (speakers.hasOwnProperty(k)) nSpeakers++; }
+
+    if (q === '') {
+      searchCount.textContent = 'Mostrando 5 de ' + VERBATIMS.length + ' verbatims';
+    } else {
+      searchCount.textContent = results.length + ' resultado' + (results.length !== 1 ? 's' : '') + ' · ' + nSpeakers + ' participante' + (nSpeakers !== 1 ? 's' : '');
+    }
+  }
+
+  searchInput.addEventListener('keyup', doSearch);
+  searchInput.addEventListener('change', doSearch);
+  doSearch();
+
+  /* ── PROFILE CARD RENDERER ── */
+  function renderProfileCard(p) {
+    var html = '<div class="dash-profile-card" data-model="' + p.model + '" data-pid="' + p.id + '" style="cursor:pointer">';
+    html += '<div class="dash-profile-av" style="background:' + p.color + '">' + p.id + '</div>';
+    html += '<div class="dash-profile-name">' + p.name + '</div>';
+    html += '<div class="dash-profile-model">' + p.model + ' · ' + p.age + ' años</div>';
+    html += '<div class="dash-profile-stat"><span>' + p.verbatims + '</span> verbatims</div>';
+    html += '<div class="dash-profile-bar"><div class="dash-profile-bar-fill" style="width:' + p.sentPct + '%;background:' + p.sentColor + '"></div></div>';
+    html += '<div class="dash-profile-sent">Sentimiento: ' + p.sentiment + '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  /* ── MINI PROFILES (Sesion tab — 2 col grid, first 4) ── */
+  var miniGrid = document.getElementById('dash-mini-profiles');
+  var miniHtml = '';
+  for (i = 0; i < 4; i++) {
+    miniHtml += renderProfileCard(PARTICIPANTS[i]);
+  }
+  miniGrid.innerHTML = miniHtml;
+
+  /* ── FULL PROFILES (Perfiles tab — 4 col grid, all 8) ── */
+  var fullGrid = document.getElementById('dash-full-profiles');
+
+  function renderFullProfiles(filter) {
+    var html = '';
+    var count = 0;
+    for (var j = 0; j < PARTICIPANTS.length; j++) {
+      if (matchesModel(PARTICIPANTS[j].model, filter)) {
+        html += renderProfileCard(PARTICIPANTS[j]);
+        count++;
+      }
+    }
+    fullGrid.innerHTML = html;
+
+    var label = filter === 'todos' ? 'Todos los modelos' : filter;
+    document.getElementById('dash-profiles-count').textContent = count + ' perfil' + (count !== 1 ? 'es' : '') + ' · ' + label;
+  }
+
+  renderFullProfiles('todos');
+
+  /* ── MODEL FILTERS ── */
+  var filtersEl = document.getElementById('dash-model-filters');
+  filtersEl.addEventListener('click', function(e) {
+    var btn = e.target.closest('.dash-filter');
+    if (!btn) return;
+    var model = btn.getAttribute('data-model');
+
+    var filters = filtersEl.querySelectorAll('.dash-filter');
+    for (i = 0; i < filters.length; i++) {
+      filters[i].className = 'dash-filter' + (filters[i].getAttribute('data-model') === model ? ' dash-filter-active' : '');
+    }
+
+    renderFullProfiles(model);
+  });
+
+  /* ── PROFILE MODAL ── */
+  var profileModal = document.getElementById('dash-profile-modal');
+  var modalBody = document.getElementById('dash-modal-body');
+
+  function openProfileModal(pid) {
+    var p = getParticipant(pid);
+    if (!p || !p.name) return;
+
+    var genderLabel = p.gender === 'M' ? 'Masculino' : 'Femenino';
+    var html = '<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">';
+    html += '<div style="width:56px;height:56px;border-radius:50%;background:' + p.color + ';display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:18px;font-weight:700;color:white;flex-shrink:0">' + p.id + '</div>';
+    html += '<div>';
+    html += '<div style="font-size:18px;font-weight:700;color:white;line-height:1.2">' + p.name + '</div>';
+    html += '<div style="font-family:var(--mono);font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:4px">' + p.model + ' · ' + p.age + ' años · ' + genderLabel + '</div>';
+    html += '</div></div>';
+
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin-bottom:20px;padding:12px;background:rgba(255,255,255,.03);border-radius:4px">';
+    html += '<div><div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:2px">Familia</div><div style="font-size:12px;color:rgba(255,255,255,.7)">' + (p.family || '-') + '</div></div>';
+    html += '<div><div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:2px">Ocupación</div><div style="font-size:12px;color:rgba(255,255,255,.7)">' + (p.job || '-') + '</div></div>';
+    html += '<div><div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:2px">Verbatims</div><div style="font-size:12px;color:rgba(255,255,255,.7)">' + p.verbatims + '</div></div>';
+    html += '<div><div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:2px">Sentimiento</div><div style="font-size:12px;color:rgba(255,255,255,.7)">' + p.sentiment + '</div></div>';
+    html += '</div>';
+
+    /* Filter verbatims for this participant */
+    var pVerbatims = [];
+    var j;
+    for (j = 0; j < VERBATIMS.length; j++) {
+      if (VERBATIMS[j].speaker === pid) pVerbatims.push(VERBATIMS[j]);
+    }
+
+    html += '<div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:10px">Verbatims (' + pVerbatims.length + ')</div>';
+
+    for (j = 0; j < pVerbatims.length; j++) {
+      var v = pVerbatims[j];
+      var sentText = v.sentiment === 'pos' ? 'Positivo' : (v.sentiment === 'neg' ? 'Negativo' : 'Neutro');
+      var sentCls = v.sentiment === 'pos' ? 'dash-sentiment-pos' : (v.sentiment === 'neg' ? 'dash-sentiment-neg' : '');
+      html += '<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
+      html += '<span style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:rgba(255,255,255,.35)">' + v.time + '</span>';
+      html += '<div class="dash-sentiment ' + sentCls + '" style="font-size:7px">' + sentText + '</div>';
+      html += '</div>';
+      html += '<div style="font-size:12px;color:rgba(255,255,255,.65);font-style:italic;line-height:1.5">\u201C' + v.quote + '\u201D</div>';
+      html += '</div>';
+    }
+
+    if (pVerbatims.length === 0) {
+      html += '<div style="font-size:11px;color:rgba(255,255,255,.3);font-style:italic;padding:12px 0">Sin verbatims registrados</div>';
+    }
+
+    modalBody.innerHTML = html;
+    profileModal.classList.add('open');
+  }
+
+  /* Event delegation for profile cards */
+  function handleProfileClick(e) {
+    var card = e.target.closest('.dash-profile-card');
+    if (!card) return;
+    var pid = card.getAttribute('data-pid');
+    if (pid) openProfileModal(pid);
+  }
+
+  document.getElementById('dash-mini-profiles').addEventListener('click', handleProfileClick);
+  document.getElementById('dash-full-profiles').addEventListener('click', handleProfileClick);
+
+  /* ── TREND TOOLTIPS (SVG dots + pie segments) ── */
+  var tooltip = document.getElementById('dash-tooltip');
+  var trendsPanel = document.getElementById('dash-panel-tendencias');
+
+  trendsPanel.addEventListener('mouseover', function(e) {
+    var dot = e.target.closest('.svg-dot');
+    var seg = e.target.closest('.svg-pie-seg');
+    if (dot) {
+      var metric = dot.getAttribute('data-metric');
+      var period = dot.getAttribute('data-period');
+      var value = dot.getAttribute('data-value');
+      var explain = dot.getAttribute('data-explain');
+      tooltip.innerHTML = '<div style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--smoke);text-transform:uppercase;margin-bottom:4px">' + metric + ' · ' + period + '</div>'
+        + '<div style="font-size:16px;font-weight:700;color:white;margin-bottom:6px">' + value + '</div>'
+        + '<div style="font-size:11px;color:rgba(255,255,255,.55);line-height:1.5">' + explain + '</div>';
+      tooltip.style.display = 'block';
+      dot.setAttribute('r', '7');
+    } else if (seg) {
+      var category = seg.getAttribute('data-category');
+      var pct = seg.getAttribute('data-pct');
+      tooltip.innerHTML = '<div style="font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--smoke);text-transform:uppercase;margin-bottom:4px">' + category + '</div>'
+        + '<div style="font-size:16px;font-weight:700;color:white">' + pct + '</div>';
+      tooltip.style.display = 'block';
+    }
+  });
+
+  trendsPanel.addEventListener('mousemove', function(e) {
+    if (tooltip.style.display === 'none') return;
+    var x = e.clientX + 14;
+    var y = e.clientY - 10;
+    if (x + 290 > window.innerWidth) x = e.clientX - 294;
+    if (y + 120 > window.innerHeight) y = e.clientY - 120;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+  });
+
+  trendsPanel.addEventListener('mouseout', function(e) {
+    var dot = e.target.closest('.svg-dot');
+    var seg = e.target.closest('.svg-pie-seg');
+    if (dot) {
+      dot.setAttribute('r', '5');
+      tooltip.style.display = 'none';
+    } else if (seg) {
+      tooltip.style.display = 'none';
+    }
+  });
+
+})();
+</script>
 
 <!-- ═══ SLIDE 13 — COMPARATIVA ROI ════════════════ -->
 <section id="comparativa" style="background:var(--dgray)">

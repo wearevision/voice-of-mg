@@ -11,3 +11,9 @@ assets/fonts/__MACOSX/
 output/screenshots/
 output/voice_of_mg_v3.html
 MG Motor Chile - Reporte Focus Group ESP & ENG.md
+# Session media (too large for git)
+*.mp3
+*.mp4
+*.wav
+Day 2, PM.txt
+*.png
