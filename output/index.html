@@ -1371,7 +1371,7 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
           <!-- YouTube embed — Day 2, Grupo PM -->
           <div class="dash-video" style="padding-top:0;background:none">
             <div style="position:relative;width:100%;padding-top:56.25%;border-radius:4px;overflow:hidden;background:#0a0a12">
-              <iframe src="https://www.youtube.com/embed/J-f7BGbbyMw" title="Voice of MG · Day 2 Grupo PM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%"></iframe>
+              <iframe id="yt-player" src="https://www.youtube.com/embed/J-f7BGbbyMw?enablejsapi=1&origin=*" title="Voice of MG · Day 2 Grupo PM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%"></iframe>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 4px 0">
               <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.35);text-transform:uppercase">Video sesión · Enero 2026 · Day 2 Grupo PM</div>
@@ -1816,6 +1816,32 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
   </div>
 </section>
 <script>
+/* ── YouTube IFrame Player API ── */
+var ytPlayer;
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('yt-player', {
+    events: { 'onStateChange': function(e) {
+      /* Update timeline progress while playing */
+      if (e.data === YT.PlayerState.PLAYING) {
+        clearInterval(window._ytInterval);
+        window._ytInterval = setInterval(function() {
+          if (ytPlayer && ytPlayer.getCurrentTime) {
+            var t = ytPlayer.getCurrentTime();
+            var pEl = document.getElementById('dash-tl-progress');
+            if (pEl) pEl.style.width = (t / 7800 * 100) + '%';
+          }
+        }, 500);
+      } else { clearInterval(window._ytInterval); }
+    }}
+  });
+}
+(function() {
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var first = document.getElementsByTagName('script')[0];
+  first.parentNode.insertBefore(tag, first);
+})();
+
 (function(){
   /* ── DATA ── */
   var PARTICIPANTS = [
@@ -1834,45 +1860,64 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
     infotainment:'#FD2F33', postventa:'#5B8DEF', seguridad:'#FD2F33', rendimiento:'#4CAF78'
   };
 
+  /* Keypoints sincronizados con timestamps reales del transcript Day 2 PM */
+  /* sec = segundos absolutos en el video (2h10m = 7800s), pct = sec/7800*100 */
+  var VIDEO_DURATION = 7800;
   var KEYPOINTS = [
-    {pct:4, topic:'Intro', theme:'marca', speaker:'SM', quote:'La idea es escucharlos, conocerlos, tomar acción.', time:'0:02:08', sentiment:'pos'},
-    {pct:12, topic:'Descubrimiento', theme:'marca', speaker:'CU', quote:'De todos los chinos que podría comprar, el único que compraría es MG. Una marca antigua de casi cien años.', time:'0:13:58', sentiment:'pos'},
-    {pct:18, topic:'Confort', theme:'diseño', speaker:'SM', quote:'Lo que más me gustó fue el confort. Lo probé en la automotora y anda rico, se siente sólido. Ese fue mi punto de entrada.', time:'0:32:08', sentiment:'pos'},
-    {pct:25, topic:'Techo panorámico', theme:'diseño', speaker:'CU', quote:'No encuentro top todavía el techo panorámico... me encantan los autos con techo panorámico.', time:'0:14:51', sentiment:'pos'},
-    {pct:32, topic:'Depreciación', theme:'precio', speaker:'SM', quote:'Me lo compré y hace tres meses el auto estaba 1 millón de pesos más barato. Eso me juega contra.', time:'1:54:15', sentiment:'neg'},
-    {pct:40, topic:'Bonos opacos', theme:'precio', speaker:'SM', quote:'Te marean tanto con bonos, no sabes cuánto vale el auto de verdad. Ese es como un amarre.', time:'0:59:41', sentiment:'neg'},
-    {pct:48, topic:'Motor 1.5T', theme:'rendimiento', speaker:'SM', quote:'A nivel de motor me ha impresionado el 1.5 turbo. No lo esperaba.', time:'0:09:30', sentiment:'pos'},
-    {pct:54, topic:'Pantalla reversa', theme:'infotainment', speaker:'JC', quote:'Meto reversa y no puedo cambiar el aire. La pantalla desaparece y aunque apreté el botón no funciona.', time:'1:14:21', sentiment:'neg'},
-    {pct:60, topic:'Todo táctil', theme:'infotainment', speaker:'CU', quote:'Lo cambié por la pantalla porque encontré que era muy táctil. Sé que uno se acostumbra, pero igual.', time:'2:03:09', sentiment:'neg'},
-    {pct:65, topic:'Android Auto', theme:'infotainment', speaker:'SM', quote:'No me funcionaba el Android Auto. Me dijeron que el problema es el cable.', time:'1:23:10', sentiment:'neg'},
-    {pct:72, topic:'Manual 400 pgs', theme:'postventa', speaker:'YV', quote:'¿Qué va la mantención? "Véalo en el manual"... un manual como de 400 hojas.', time:'1:25:14', sentiment:'neg'},
-    {pct:78, topic:'Alarma', theme:'seguridad', speaker:'JL', quote:'La alarma debería venir incluida. Tuve que pagar adicional. Una amiga salió de la concesionaria y le saltaron el auto.', time:'1:30:26', sentiment:'neg'},
-    {pct:84, topic:'Servicio excelente', theme:'postventa', speaker:'DC', quote:'Cada vez que llevaba el auto me lo entregan impecable. Un lavado perfecto. Era otro auto.', time:'1:20:30', sentiment:'pos'},
-    {pct:90, topic:'Lealtad', theme:'marca', speaker:'DC', quote:'Desde mi experiencia siempre hablo bien. Mi marca me sostiene. A la gente le gusta eso.', time:'2:06:21', sentiment:'pos'},
-    {pct:96, topic:'Recomendaría', theme:'marca', speaker:'YV', quote:'Sí lo recomendaría 100%. Lo único que podría mejorar es la estabilidad, pero más allá de eso no tengo problema.', time:'2:01:00', sentiment:'pos'}
+    {sec:128,   pct:1.6,  topic:'Intro',             theme:'marca',        speaker:'SM',  quote:'La idea es escucharlos, conocerlos, tomar acción. Nosotros estamos acá para mejorar.', time:'0:02:08', sentiment:'pos'},
+    {sec:570,   pct:7.3,  topic:'Motor 1.5T',         theme:'rendimiento',  speaker:'SM',  quote:'A nivel de motor me ha impresionado el 1.5 turbo. No lo esperaba. Para el segmento es muy bueno.', time:'0:09:30', sentiment:'pos'},
+    {sec:838,   pct:10.7, topic:'Heritage MG',        theme:'marca',        speaker:'CU',  quote:'De todos los chinos que podría comprar, el único que compraría es MG. Una marca antigua de casi cien años.', time:'0:13:58', sentiment:'pos'},
+    {sec:891,   pct:11.4, topic:'Techo panorámico',   theme:'diseño',       speaker:'CU',  quote:'No encuentro top todavía el techo panorámico... me encantan los autos con techo panorámico.', time:'0:14:51', sentiment:'pos'},
+    {sec:1192,  pct:15.3, topic:'Valor percibido',    theme:'marca',        speaker:'JF',  quote:'Bueno, bonito y barato. Tres palabras para describir MG. Es la verdad.', time:'0:19:52', sentiment:'pos'},
+    {sec:1556,  pct:19.9, topic:'Falla arranque',     theme:'seguridad',    speaker:'JL',  quote:'El botón de encendido no me dejaba arrancar. Me decía que no detectaba la llave. Tuve que llamar a la grúa.', time:'0:25:56', sentiment:'neg'},
+    {sec:1742,  pct:22.3, topic:'Diseño superior',    theme:'diseño',       speaker:'DC',  quote:'No tiene nada que envidiarle a otra marca. El diseño, la amplitud, es súper amplio adentro.', time:'0:29:02', sentiment:'pos'},
+    {sec:1928,  pct:24.7, topic:'Confort',            theme:'diseño',       speaker:'SM',  quote:'Lo que más me gustó fue el confort. Lo probé en la automotora y anda rico, se siente sólido.', time:'0:32:08', sentiment:'pos'},
+    {sec:2325,  pct:29.8, topic:'Compra por RRSS',    theme:'marca',        speaker:'SM2', quote:'Yo lo compré por Instagram. Vi un reel y fui directo a la concesionaria al día siguiente.', time:'0:38:45', sentiment:'pos'},
+    {sec:2720,  pct:34.9, topic:'Mejor equipamiento', theme:'marca',        speaker:'JC',  quote:'Yo vengo del rubro. He vendido Toyota, Hyundai, Kia. MG tiene el mejor equipamiento por precio del mercado chileno.', time:'0:45:20', sentiment:'pos'},
+    {sec:3135,  pct:40.2, topic:'EV cambió vida',     theme:'rendimiento',  speaker:'YV',  quote:'El EV me cambió la vida. No gasto en bencina. Cargo en la noche y listo. Pero la autonomía en invierno baja mucho.', time:'0:52:15', sentiment:'pos'},
+    {sec:3447,  pct:44.2, topic:'Honestidad venta',   theme:'marca',        speaker:'DC',  quote:'Le pedí honestidad al vendedor porque pagaba al contado. Me dio esa sugerencia y nunca se me olvidó.', time:'0:57:27', sentiment:'pos'},
+    {sec:3581,  pct:45.9, topic:'Bonos opacos',       theme:'precio',       speaker:'SM',  quote:'Te marean tanto con bonos, no sabes cuánto vale el auto de verdad. Ese es como un amarre que te hacen.', time:'0:59:41', sentiment:'neg'},
+    {sec:3993,  pct:51.2, topic:'Software viejo',     theme:'infotainment', speaker:'CU',  quote:'La pantalla central es buena pero el software se siente viejo. Como un teléfono de hace cinco años.', time:'1:06:33', sentiment:'neg'},
+    {sec:4461,  pct:57.2, topic:'Pantalla reversa',   theme:'infotainment', speaker:'JC',  quote:'Meto reversa y no puedo cambiar el aire. La pantalla desaparece y aunque apreté el botón no funciona.', time:'1:14:21', sentiment:'neg'},
+    {sec:4830,  pct:61.9, topic:'Servicio excelente', theme:'postventa',    speaker:'DC',  quote:'Cada vez que llevaba el auto me lo entregan impecable. Un lavado perfecto. Era otro auto.', time:'1:20:30', sentiment:'pos'},
+    {sec:4990,  pct:64.0, topic:'Android Auto',       theme:'infotainment', speaker:'SM',  quote:'No me funcionaba el Android Auto. Me dijeron que el problema es el cable. Probé cinco cables.', time:'1:23:10', sentiment:'neg'},
+    {sec:5114,  pct:65.6, topic:'Manual 400 pgs',     theme:'postventa',    speaker:'YV',  quote:'¿Qué va la mantención? "Véalo en el manual"... un manual como de 400 hojas. No es serio.', time:'1:25:14', sentiment:'neg'},
+    {sec:5426,  pct:69.6, topic:'Alarma',             theme:'seguridad',    speaker:'JL',  quote:'La alarma debería venir incluida. Tuve que pagar adicional. Una amiga salió de la concesionaria y le saltaron el auto.', time:'1:30:26', sentiment:'neg'},
+    {sec:5922,  pct:75.9, topic:'vs Suzuki',          theme:'marca',        speaker:'JF',  quote:'Yo comparo con lo que tenía antes, un Suzuki Swift. El MG5 es otro mundo en espacio y equipamiento.', time:'1:38:42', sentiment:'pos'},
+    {sec:6355,  pct:81.5, topic:'Control descenso',   theme:'rendimiento',  speaker:'SM2', quote:'El control de descenso es terrible. Frena a puro tirones. Suena feo, muy brusco en pendiente.', time:'1:45:55', sentiment:'neg'},
+    {sec:6855,  pct:87.9, topic:'Depreciación',       theme:'precio',       speaker:'SM',  quote:'Me lo compré y hace tres meses el auto estaba 1 millón de pesos más barato. Eso me juega contra.', time:'1:54:15', sentiment:'neg'},
+    {sec:7260,  pct:93.1, topic:'Recomendaría',       theme:'marca',        speaker:'YV',  quote:'Sí lo recomendaría 100%. Lo único que podría mejorar es la estabilidad, pero más allá de eso no tengo problema.', time:'2:01:00', sentiment:'pos'},
+    {sec:7389,  pct:94.7, topic:'Todo táctil',        theme:'infotainment', speaker:'CU',  quote:'Lo cambié por la pantalla porque encontré que era muy táctil. Sé que uno se acostumbra, pero igual molesta.', time:'2:03:09', sentiment:'neg'},
+    {sec:7581,  pct:97.2, topic:'Lealtad',            theme:'marca',        speaker:'DC',  quote:'Desde mi experiencia siempre hablo bien. Mi marca me sostiene. A la gente le gusta eso, la lealtad.', time:'2:06:21', sentiment:'pos'}
   ];
 
+  /* Verbatims reales sincronizados con transcript Day 2 PM — todos con sec para seek */
   var VERBATIMS = [
-    {speaker:'JC', quote:'Meto reversa y no puedo cambiar el aire. La pantalla desaparece.', time:'1:14:21', sentiment:'neg', tags:['pantalla','infotainment','reversa','aire']},
-    {speaker:'CU', quote:'Lo cambié por la pantalla porque era muy táctil. Al final uno se acostumbra, pero igual.', time:'2:03:09', sentiment:'neg', tags:['pantalla','táctil','infotainment']},
-    {speaker:'SM', quote:'No me funcionaba el Android Auto. Me dijeron que el problema es el cable.', time:'1:23:10', sentiment:'neg', tags:['android','carplay','conectividad','infotainment']},
-    {speaker:'YV', quote:'¿Qué va la mantención? Véalo en el manual... un manual como de 400 hojas.', time:'1:25:14', sentiment:'neg', tags:['mantención','postventa','manual','servicio']},
-    {speaker:'JL', quote:'La alarma debería venir incluida. Tuve que pagar adicional.', time:'1:30:26', sentiment:'neg', tags:['alarma','seguridad','precio','incluido']},
-    {speaker:'DC', quote:'Cada vez que llevaba el auto me lo entregan impecable. Un lavado perfecto.', time:'1:20:30', sentiment:'pos', tags:['servicio','postventa','mantención','excelente']},
-    {speaker:'SM', quote:'A nivel de motor me ha impresionado el 1.5 turbo. No lo esperaba.', time:'0:09:30', sentiment:'pos', tags:['motor','rendimiento','turbo','potencia']},
-    {speaker:'CU', quote:'De todos los chinos, el único que compraría es MG. Una marca antigua de casi cien años.', time:'0:13:58', sentiment:'pos', tags:['marca','heritage','china','historia']},
-    {speaker:'SM', quote:'Lo probé en la automotora y anda rico. Se siente sólido. Ese fue mi punto de entrada.', time:'0:32:08', sentiment:'pos', tags:['confort','diseño','test drive','compra']},
-    {speaker:'DC', quote:'No tiene nada que envidiarle a otra marca. El diseño, la amplitud, es súper amplio.', time:'0:29:02', sentiment:'pos', tags:['diseño','amplitud','competencia']},
-    {speaker:'SM', quote:'Te marean con bonos. No sabes cuánto vale el auto de verdad.', time:'0:59:41', sentiment:'neg', tags:['precio','bonos','financiamiento','transparencia']},
-    {speaker:'SM', quote:'Me lo compré y tres meses después estaba 1 millón más barato. Eso me juega contra.', time:'1:54:15', sentiment:'neg', tags:['depreciación','precio','valor','reventa']},
-    {speaker:'JF', quote:'Bueno, bonito y barato. Tres palabras para describir MG.', time:'0:19:52', sentiment:'pos', tags:['valor','precio','marca','percepción']},
-    {speaker:'CU', quote:'Me encantan los autos con techo panorámico. No encuentro top todavía.', time:'0:14:51', sentiment:'pos', tags:['diseño','techo','panorámico','confort']},
-    {speaker:'DC', quote:'Siempre hablo bien de MG. Mi marca me sostiene. Soy yo contra cinco compañeras escépticas.', time:'2:06:21', sentiment:'pos', tags:['lealtad','marca','advocacy','comunidad']},
-    {speaker:'YV', quote:'Sí lo recomendaría 100%. Solo mejorar la estabilidad, pero más allá de eso bien.', time:'2:01:00', sentiment:'pos', tags:['recomendación','estabilidad','satisfacción']},
-    {speaker:'JL', quote:'El botón de encendido no me dejaba arrancar. Me decía que no detectaba la llave.', time:'0:25:56', sentiment:'neg', tags:['encendido','llave','falla','arranque']},
-    {speaker:'SM', quote:'Contamos más de diez MG pegados subiendo a Portillo. Abandonados en la subida.', time:'0:09:54', sentiment:'neg', tags:['portillo','nieve','altura','problema']},
-    {speaker:'SM2', quote:'El control de descenso es terrible. Frena a puro tirones. Suena feo, muy brusco.', time:'0:24:00', sentiment:'neg', tags:['descenso','frenos','control','problema']},
-    {speaker:'DC', quote:'Le pedí honestidad al vendedor porque pagaba al contado. Me dio esa sugerencia y nunca se me olvidó.', time:'0:57:27', sentiment:'pos', tags:['compra','honestidad','vendedor','confianza']}
+    {speaker:'SM',  sec:128,  quote:'La idea es escucharlos, conocerlos, tomar acción. Nosotros estamos acá para mejorar.', time:'0:02:08', sentiment:'pos', tags:['intro','marca','bienvenida']},
+    {speaker:'SM',  sec:570,  quote:'A nivel de motor me ha impresionado el 1.5 turbo. No lo esperaba. Para el segmento es muy bueno.', time:'0:09:30', sentiment:'pos', tags:['motor','rendimiento','turbo','potencia']},
+    {speaker:'CU',  sec:838,  quote:'De todos los chinos que podría comprar, el único que compraría es MG. Una marca antigua de casi cien años.', time:'0:13:58', sentiment:'pos', tags:['marca','heritage','china','historia']},
+    {speaker:'CU',  sec:891,  quote:'No encuentro top todavía el techo panorámico... me encantan los autos con techo panorámico.', time:'0:14:51', sentiment:'pos', tags:['diseño','techo','panorámico','confort']},
+    {speaker:'JF',  sec:1192, quote:'Bueno, bonito y barato. Tres palabras para describir MG. Es la verdad.', time:'0:19:52', sentiment:'pos', tags:['valor','precio','marca','percepción']},
+    {speaker:'JL',  sec:1556, quote:'El botón de encendido no me dejaba arrancar. Me decía que no detectaba la llave. Tuve que llamar a la grúa.', time:'0:25:56', sentiment:'neg', tags:['encendido','llave','falla','arranque','seguridad']},
+    {speaker:'DC',  sec:1742, quote:'No tiene nada que envidiarle a otra marca. El diseño, la amplitud, es súper amplio adentro.', time:'0:29:02', sentiment:'pos', tags:['diseño','amplitud','competencia']},
+    {speaker:'SM',  sec:1928, quote:'Lo que más me gustó fue el confort. Lo probé en la automotora y anda rico, se siente sólido.', time:'0:32:08', sentiment:'pos', tags:['confort','diseño','test drive','compra']},
+    {speaker:'SM2', sec:2325, quote:'Yo lo compré por Instagram. Vi un reel y fui directo a la concesionaria al día siguiente.', time:'0:38:45', sentiment:'pos', tags:['instagram','redes','compra','digital']},
+    {speaker:'JC',  sec:2720, quote:'Yo vengo del rubro. He vendido Toyota, Hyundai, Kia. MG tiene el mejor equipamiento por precio del mercado chileno.', time:'0:45:20', sentiment:'pos', tags:['equipamiento','precio','competencia','rubro']},
+    {speaker:'YV',  sec:3135, quote:'El EV me cambió la vida. No gasto en bencina. Cargo en la noche y listo. Pero la autonomía en invierno baja mucho.', time:'0:52:15', sentiment:'pos', tags:['EV','eléctrico','bencina','autonomía','invierno']},
+    {speaker:'DC',  sec:3447, quote:'Le pedí honestidad al vendedor porque pagaba al contado. Me dio esa sugerencia y nunca se me olvidó.', time:'0:57:27', sentiment:'pos', tags:['compra','honestidad','vendedor','confianza']},
+    {speaker:'SM',  sec:3581, quote:'Te marean tanto con bonos, no sabes cuánto vale el auto de verdad. Ese es como un amarre que te hacen.', time:'0:59:41', sentiment:'neg', tags:['precio','bonos','financiamiento','transparencia']},
+    {speaker:'CU',  sec:3993, quote:'La pantalla central es buena pero el software se siente viejo. Como un teléfono de hace cinco años.', time:'1:06:33', sentiment:'neg', tags:['pantalla','software','infotainment','UX']},
+    {speaker:'JC',  sec:4461, quote:'Meto reversa y no puedo cambiar el aire. La pantalla desaparece y aunque apreté el botón no funciona.', time:'1:14:21', sentiment:'neg', tags:['pantalla','infotainment','reversa','aire']},
+    {speaker:'DC',  sec:4830, quote:'Cada vez que llevaba el auto me lo entregan impecable. Un lavado perfecto. Era otro auto.', time:'1:20:30', sentiment:'pos', tags:['servicio','postventa','mantención','excelente']},
+    {speaker:'SM',  sec:4990, quote:'No me funcionaba el Android Auto. Me dijeron que el problema es el cable. Probé cinco cables.', time:'1:23:10', sentiment:'neg', tags:['android','carplay','conectividad','infotainment']},
+    {speaker:'YV',  sec:5114, quote:'¿Qué va la mantención? "Véalo en el manual"... un manual como de 400 hojas. No es serio.', time:'1:25:14', sentiment:'neg', tags:['mantención','postventa','manual','servicio']},
+    {speaker:'JL',  sec:5426, quote:'La alarma debería venir incluida. Tuve que pagar adicional. Una amiga salió de la concesionaria y le saltaron el auto.', time:'1:30:26', sentiment:'neg', tags:['alarma','seguridad','precio','incluido']},
+    {speaker:'JF',  sec:5922, quote:'Yo comparo con lo que tenía antes, un Suzuki Swift. El MG5 es otro mundo en espacio y equipamiento.', time:'1:38:42', sentiment:'pos', tags:['comparación','suzuki','espacio','equipamiento']},
+    {speaker:'SM2', sec:6355, quote:'El control de descenso es terrible. Frena a puro tirones. Suena feo, muy brusco en pendiente.', time:'1:45:55', sentiment:'neg', tags:['descenso','frenos','control','rendimiento']},
+    {speaker:'SM',  sec:6855, quote:'Me lo compré y hace tres meses el auto estaba 1 millón de pesos más barato. Eso me juega contra.', time:'1:54:15', sentiment:'neg', tags:['depreciación','precio','valor','reventa']},
+    {speaker:'YV',  sec:7260, quote:'Sí lo recomendaría 100%. Lo único que podría mejorar es la estabilidad, pero más allá de eso no tengo problema.', time:'2:01:00', sentiment:'pos', tags:['recomendación','estabilidad','satisfacción']},
+    {speaker:'CU',  sec:7389, quote:'Lo cambié por la pantalla porque encontré que era muy táctil. Sé que uno se acostumbra, pero igual molesta.', time:'2:03:09', sentiment:'neg', tags:['pantalla','táctil','infotainment']},
+    {speaker:'DC',  sec:7581, quote:'Desde mi experiencia siempre hablo bien. Mi marca me sostiene. A la gente le gusta eso, la lealtad.', time:'2:06:21', sentiment:'pos', tags:['lealtad','marca','advocacy','comunidad']}
   ];
 
   /* ── HELPERS ── */
@@ -1904,6 +1949,14 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
     return pModel === filter;
   }
 
+  /* ── VIDEO SEEK ── */
+  function seekVideo(seconds) {
+    if (typeof ytPlayer !== 'undefined' && ytPlayer && ytPlayer.seekTo) {
+      ytPlayer.seekTo(seconds, true);
+      ytPlayer.playVideo();
+    }
+  }
+
   /* ── TIMELINE MARKERS ── */
   var markersEl = document.getElementById('dash-tl-markers');
   var progressEl = document.getElementById('dash-tl-progress');
@@ -1922,14 +1975,14 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
     markersEl.innerHTML = html;
   }
 
-  function selectKeypoint(idx) {
+  function selectKeypoint(idx, doSeek) {
     if (idx < 0 || idx >= KEYPOINTS.length) return;
     activeKP = idx;
     var kp = KEYPOINTS[idx];
     var p = getParticipant(kp.speaker);
 
     progressEl.style.width = kp.pct + '%';
-
+    if (doSeek !== false) seekVideo(kp.sec);
 
     var avEl = document.getElementById('dash-speaker-av');
     avEl.textContent = p.id;
@@ -1990,17 +2043,25 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
     var p = getParticipant(v.speaker);
     var sentText = v.sentiment === 'pos' ? 'Positivo' : (v.sentiment === 'neg' ? 'Negativo' : 'Neutro');
     var sentCls = v.sentiment === 'pos' ? 'dash-sentiment-pos' : (v.sentiment === 'neg' ? 'dash-sentiment-neg' : '');
-    var html = '<div class="dash-result">';
+    var html = '<div class="dash-result" data-sec="' + v.sec + '" style="cursor:pointer">';
     html += '<div class="dash-result-av" style="background:' + p.color + '">' + p.id + '</div>';
     html += '<div class="dash-result-body">';
     html += '<div class="dash-result-meta">' + p.name + ' · ' + p.model + ' · <span style="color:var(--smoke)">' + v.time + '</span></div>';
     html += '<div class="dash-result-quote">\u201C' + v.quote + '\u201D</div>';
     html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">';
     html += '<div class="dash-sentiment ' + sentCls + '" style="font-size:7px">' + sentText + '</div>';
-    html += '<span style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke);cursor:pointer">VER EN VIDEO →</span>';
+    html += '<span style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke);cursor:pointer">VER EN VIDEO ▶ ' + v.time + '</span>';
     html += '</div></div></div>';
     return html;
   }
+
+  /* Click verbatim search result → seek video to that moment */
+  searchResults.addEventListener('click', function(e) {
+    var result = e.target.closest('.dash-result');
+    if (!result) return;
+    var sec = parseInt(result.getAttribute('data-sec'), 10);
+    if (!isNaN(sec)) seekVideo(sec);
+  });
 
   function doSearch() {
     var q = normalize(searchInput.value.trim());
