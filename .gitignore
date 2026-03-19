@@ -1,1 +1,13 @@
 .DS_Store
+__MACOSX/
+*.pdf
+*.rtf
+.playwright-mcp/
+assets/brand_ref/
+assets/body_reference.html
+assets/mod_photos/
+assets/fonts/Favorit/
+assets/fonts/__MACOSX/
+output/screenshots/
+output/voice_of_mg_v3.html
+MG Motor Chile - Reporte Focus Group ESP & ENG.md
