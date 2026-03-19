@@ -27,6 +27,7 @@
           <span class="dash-tab dash-tab-active" data-tab="sesion">Sesión</span>
           <span class="dash-tab" data-tab="perfiles">Perfiles</span>
           <span class="dash-tab" data-tab="tendencias">Tendencias</span>
+          <span class="dash-tab" data-tab="actionplan">Action Plan</span>
           <span class="dash-tab" data-tab="exportar">Exportar</span>
         </div>
       </div>
@@ -247,6 +248,202 @@
         </div>
       </div>
 
+      <!-- ══ PANEL: Action Plan ══ -->
+      <div id="dash-panel-actionplan" style="display:none;padding:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;height:480px">
+
+          <!-- Left: Action Items -->
+          <div style="display:flex;flex-direction:column;overflow:hidden">
+            <div class="dash-panel-label" style="margin-bottom:12px">Plan de acción · Generado por IA</div>
+
+            <!-- Priority filters -->
+            <div style="display:flex;gap:4px;margin-bottom:12px">
+              <span class="dash-filter dash-filter-active" data-priority="all" id="ap-filter-all">Todos</span>
+              <span class="dash-filter" data-priority="critical" id="ap-filter-critical">Crítico</span>
+              <span class="dash-filter" data-priority="high" id="ap-filter-high">Alto</span>
+              <span class="dash-filter" data-priority="medium" id="ap-filter-medium">Medio</span>
+            </div>
+
+            <!-- Action items list -->
+            <div style="flex:1;overflow-y:auto;padding-right:6px" id="ap-items-list">
+
+              <!-- Critical items -->
+              <div class="ap-item" data-priority="critical">
+                <div class="ap-priority ap-priority-critical">CRÍTICO</div>
+                <div class="ap-title">Estabilizar software infotainment</div>
+                <div class="ap-desc">28 menciones negativas. Pantalla se congela, Android Auto falla, clima se bloquea en reversa. OTA urgente Q2 2026.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Infotainment</span>
+                  <span class="ap-tag">6 sesiones</span>
+                  <span class="ap-owner">→ Producto + Ingeniería</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="critical">
+                <div class="ap-priority ap-priority-critical">CRÍTICO</div>
+                <div class="ap-title">Política de precios transparente</div>
+                <div class="ap-desc">22 menciones. Bonos opacos, depreciación agresiva post-compra. Implementar precio neto sin descuentos ocultos.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Precio</span>
+                  <span class="ap-tag">5 sesiones</span>
+                  <span class="ap-owner">→ Comercial + Marketing</span>
+                </div>
+              </div>
+
+              <!-- High items -->
+              <div class="ap-item" data-priority="high">
+                <div class="ap-priority ap-priority-high">ALTO</div>
+                <div class="ap-title">Stock de repuestos críticos en Chile</div>
+                <div class="ap-desc">18 menciones postventa. Espera promedio 15-25 días. Meta: repuestos de desgaste en 48 horas.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Postventa</span>
+                  <span class="ap-tag">5 sesiones</span>
+                  <span class="ap-owner">→ Supply Chain + Postventa</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="high">
+                <div class="ap-priority ap-priority-high">ALTO</div>
+                <div class="ap-title">Alarma incluida de serie</div>
+                <div class="ap-desc">14 menciones seguridad. Alarma con sensor movimiento debe venir de fábrica. Incidente de robo post-concesionaria reportado.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Seguridad</span>
+                  <span class="ap-tag">4 sesiones</span>
+                  <span class="ap-owner">→ Producto</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="high">
+                <div class="ap-priority ap-priority-high">ALTO</div>
+                <div class="ap-title">Red de carga EV + convenio Copec Voltex</div>
+                <div class="ap-desc">Dueños EV reportan incompatibilidad de conectores y falta de puntos de carga. Alianza con red existente.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">EV</span>
+                  <span class="ap-tag">3 sesiones</span>
+                  <span class="ap-owner">→ Estrategia + Alianzas</span>
+                </div>
+              </div>
+
+              <!-- Medium items -->
+              <div class="ap-item" data-priority="medium">
+                <div class="ap-priority ap-priority-medium">MEDIO</div>
+                <div class="ap-title">Modernizar app myMG</div>
+                <div class="ap-desc">App percibida como abandonada. Agregar: estado de carga EV, agendamiento servicio, notificaciones recalls.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Digital</span>
+                  <span class="ap-tag">4 sesiones</span>
+                  <span class="ap-owner">→ Producto Digital</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="medium">
+                <div class="ap-priority ap-priority-medium">MEDIO</div>
+                <div class="ap-title">Programa embajadores MG</div>
+                <div class="ap-desc">Clientes promotores orgánicos identificados. Crear programa con beneficios: descuentos mantención, acceso anticipado modelos.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Marketing</span>
+                  <span class="ap-tag">3 sesiones</span>
+                  <span class="ap-owner">→ Marketing + CRM</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="medium">
+                <div class="ap-priority ap-priority-medium">MEDIO</div>
+                <div class="ap-title">Comunicación proactiva de recalls</div>
+                <div class="ap-desc">Clientes se enteran por Facebook. Implementar SMS + email + push app para recalls y actualizaciones.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Comunicaciones</span>
+                  <span class="ap-tag">2 sesiones</span>
+                  <span class="ap-owner">→ CX + Comunicaciones</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="medium">
+                <div class="ap-priority ap-priority-medium">MEDIO</div>
+                <div class="ap-title">Contenido redes sociales para jóvenes</div>
+                <div class="ap-desc">RRSS percibidas como "fomes". Estrategia TikTok/Reels con testimonios reales de dueños sub-35.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Marketing</span>
+                  <span class="ap-tag">2 sesiones</span>
+                  <span class="ap-owner">→ Marketing Digital</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: AI Chat -->
+          <div style="display:flex;flex-direction:column;border-left:1px solid rgba(255,255,255,.06);padding-left:16px">
+            <div class="dash-panel-label" style="margin-bottom:12px">
+              <span style="display:inline-flex;align-items:center;gap:6px">
+                <span style="width:6px;height:6px;border-radius:50%;background:#4CAF78;display:inline-block"></span>
+                WAV AI · Asistente de insights
+              </span>
+            </div>
+
+            <!-- Chat messages area -->
+            <div style="flex:1;overflow-y:auto;padding-right:4px" id="ap-chat-messages">
+              <!-- System message -->
+              <div style="margin-bottom:12px">
+                <div style="background:rgba(160,0,34,.08);border:1px solid rgba(160,0,34,.15);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">
+                  <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:6px">WAV AI · Resumen automático</div>
+                  Analicé <strong style="color:white">6 sesiones</strong>, <strong style="color:white">44 participantes</strong> y <strong style="color:white">114 verbatims</strong>. Los tres temas más urgentes son: infotainment (28 menciones negativas), precio/depreciación (22), y postventa (18). ¿En qué tema quieres profundizar?
+                </div>
+              </div>
+
+              <!-- Example user message -->
+              <div style="margin-bottom:12px;display:flex;justify-content:flex-end">
+                <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.75);max-width:80%;line-height:1.5">
+                  ¿Cuáles son los perfiles más críticos con el infotainment?
+                </div>
+              </div>
+
+              <!-- AI response -->
+              <div style="margin-bottom:12px">
+                <div style="background:rgba(160,0,34,.05);border:1px solid rgba(160,0,34,.1);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">
+                  <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:6px">WAV AI</div>
+                  Los perfiles más críticos con infotainment son:<br><br>
+                  <strong style="color:white">1. Tomás Figueroa</strong> (Developer, 28 años) — Describe el sistema como "Android 8 en era de Android 16". Pide actualizaciones OTA.<br>
+                  <strong style="color:white">2. César Ulloa</strong> (Empresario, 45 años) — Cambió de auto por la pantalla táctil. "Software viejo, como teléfono de hace 5 años".<br>
+                  <strong style="color:white">3. Juan Carlos Pinar</strong> (Ventas, 50 años) — Reporta bloqueo de clima al usar reversa. Bug funcional.<br><br>
+                  <span style="color:var(--smoke)">Patrón común:</span> usuarios con referente tecnológico alto (developer, empresario tech) son los más vocales. Usuarios mayores toleran más.
+                </div>
+              </div>
+
+              <!-- Example user message -->
+              <div style="margin-bottom:12px;display:flex;justify-content:flex-end">
+                <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.75);max-width:80%;line-height:1.5">
+                  ¿Qué acción concreta propones para Q2?
+                </div>
+              </div>
+
+              <!-- AI response -->
+              <div style="margin-bottom:12px">
+                <div style="background:rgba(160,0,34,.05);border:1px solid rgba(160,0,34,.1);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">
+                  <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:6px">WAV AI</div>
+                  <strong style="color:white">Recomendación Q2 2026:</strong><br><br>
+                  <span style="color:#FD2F33">●</span> <strong style="color:white">OTA de emergencia</strong> — Fix bug reversa/clima, mejorar respuesta táctil. ETA: 6 semanas.<br>
+                  <span style="color:#F5A623">●</span> <strong style="color:white">Tutorial en entrega</strong> — Video 3 min en tablet durante handover. Reduce frustración 40% (benchmark Hyundai).<br>
+                  <span style="color:#4CAF78">●</span> <strong style="color:white">Canal WhatsApp soporte tech</strong> — Línea directa para problemas de conectividad. Costo bajo, impacto alto.<br><br>
+                  <span style="color:var(--smoke)">Impacto estimado:</span> Frustración infotainment de 7.1 → 5.5 en medición Q3.
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat input -->
+            <div style="margin-top:12px;border-top:1px solid rgba(255,255,255,.06);padding-top:12px">
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="text" id="ap-chat-input" placeholder="Pregunta sobre los datos, pide análisis, sugiere acciones..." style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:10px 14px;color:rgba(255,255,255,.7);font-size:11px;font-family:var(--sans);outline:none;transition:border-color .2s" onfocus="this.style.borderColor='rgba(160,0,34,.3)'" onblur="this.style.borderColor='rgba(255,255,255,.08)'">
+                <button id="ap-chat-send" style="background:var(--red);border:none;border-radius:6px;padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:opacity .2s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                  <span style="color:white;font-family:var(--mono);font-size:8px;letter-spacing:1px;text-transform:uppercase">Enviar</span>
+                </button>
+              </div>
+              <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.15);text-transform:uppercase;margin-top:8px;text-align:center">Mockup · El chat AI se conectará a los verbatims reales de cada sesión</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ══ PANEL: Exportar ══ -->
       <div id="dash-panel-exportar" style="display:none;padding:32px 16px">
         <div class="dash-panel-label" style="margin-bottom:20px">Exportar datos de sesión</div>
@@ -438,7 +635,7 @@
 
   /* ── TABS ── */
   var tabsEl = document.getElementById('dash-tabs');
-  var panelIds = ['sesion', 'perfiles', 'tendencias', 'exportar'];
+  var panelIds = ['sesion', 'perfiles', 'tendencias', 'actionplan', 'exportar'];
 
   tabsEl.addEventListener('click', function(e) {
     var tab = e.target.closest('.dash-tab');
@@ -697,6 +894,93 @@
       tooltip.style.display = 'none';
     }
   });
+
+  /* ── ACTION PLAN FILTERS ── */
+  var apItems = document.querySelectorAll('.ap-item');
+  var apFilterEls = document.querySelectorAll('[data-priority]');
+
+  function filterAP(priority) {
+    for (var j = 0; j < apItems.length; j++) {
+      var item = apItems[j];
+      if (!item.classList.contains('ap-item')) continue;
+      if (priority === 'all' || item.getAttribute('data-priority') === priority) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    }
+    // Update filter buttons
+    var filterBtns = document.querySelectorAll('#dash-panel-actionplan .dash-filter');
+    for (var k = 0; k < filterBtns.length; k++) {
+      filterBtns[k].className = 'dash-filter' + (filterBtns[k].getAttribute('data-priority') === priority ? ' dash-filter-active' : '');
+    }
+  }
+
+  var apFiltersContainer = document.querySelector('#dash-panel-actionplan .dash-filter');
+  if (apFiltersContainer) {
+    apFiltersContainer.parentElement.addEventListener('click', function(e) {
+      var btn = e.target.closest('.dash-filter');
+      if (!btn) return;
+      filterAP(btn.getAttribute('data-priority'));
+    });
+  }
+
+  /* ── CHAT PLACEHOLDER INTERACTION ── */
+  var chatInput = document.getElementById('ap-chat-input');
+  var chatSend = document.getElementById('ap-chat-send');
+  var chatMessages = document.getElementById('ap-chat-messages');
+
+  var CHAT_RESPONSES = [
+    {q: 'depreciación', a: 'La depreciación promedio reportada es de <strong style="color:white">15-20% en 6 meses</strong> post-compra. Sergio Martinez (Day 2 PM) reportó caída de $1M en 3 meses. La causa principal es la política de bonos que distorsiona el precio de lista. <br><br><span style="color:var(--smoke)">Recomendación:</span> precio neto transparente + programa de recompra garantizado al 70% a 3 años.'},
+    {q: 'postventa', a: 'La postventa tiene opiniones polarizadas. <strong style="color:white">Daisy Córdova</strong> reporta servicio excelente ("lavado perfecto"). Pero <strong style="color:white">Gonzalo Muñoz</strong> esperó 22 días por un espejo. <br><br>Promedio de espera repuestos: <strong style="color:white">15-25 días</strong> para piezas no estándar. Talleres autorizados insuficientes (1 en Viña del Mar, 3 semanas de espera).'},
+    {q: 'ev', a: 'Los dueños de EV reportan: autonomía real <strong style="color:white">25% menor</strong> que la publicitada en invierno. Infraestructura de carga deficiente — incompatibilidad de conectores reportada. <br><br>Oportunidad: <strong style="color:white">convenio Copec Voltex</strong> + asistencia instalación cargador domiciliario (hoy el cliente debe buscar por su cuenta).'},
+    {q: 'default', a: 'Interesante pregunta. Basado en los datos de 6 sesiones y 44 participantes, puedo analizar tendencias de sentimiento, comparar perfiles, o profundizar en temas específicos. <br><br>Prueba preguntar sobre: <strong style="color:white">infotainment</strong>, <strong style="color:white">depreciación</strong>, <strong style="color:white">postventa</strong>, <strong style="color:white">EV</strong>, o <strong style="color:white">seguridad</strong>.'}
+  ];
+
+  function addChatMessage(text, isUser) {
+    var div = document.createElement('div');
+    div.style.marginBottom = '12px';
+    if (isUser) {
+      div.style.display = 'flex';
+      div.style.justifyContent = 'flex-end';
+      div.innerHTML = '<div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.75);max-width:80%;line-height:1.5">' + text + '</div>';
+    } else {
+      div.innerHTML = '<div style="background:rgba(160,0,34,.05);border:1px solid rgba(160,0,34,.1);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6"><div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:6px">WAV AI</div>' + text + '</div>';
+    }
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function handleChatSend() {
+    if (!chatInput) return;
+    var q = chatInput.value.trim();
+    if (!q) return;
+
+    addChatMessage(q, true);
+    chatInput.value = '';
+
+    var normalQ = normalize(q);
+    var response = CHAT_RESPONSES[CHAT_RESPONSES.length - 1].a; // default
+    for (var j = 0; j < CHAT_RESPONSES.length - 1; j++) {
+      if (normalQ.indexOf(CHAT_RESPONSES[j].q) !== -1) {
+        response = CHAT_RESPONSES[j].a;
+        break;
+      }
+    }
+
+    setTimeout(function() {
+      addChatMessage(response, false);
+    }, 800);
+  }
+
+  if (chatSend) {
+    chatSend.addEventListener('click', handleChatSend);
+  }
+  if (chatInput) {
+    chatInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleChatSend();
+    });
+  }
 
 })();
 </script>

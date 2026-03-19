@@ -48,7 +48,18 @@ nav{position:fixed;top:3px;left:0;right:0;z-index:200;display:flex;align-items:c
 .nav-link:hover,.nav-link.active{color:var(--text-primary);border-color:rgba(255,255,255,0.1)}
 .nav-link.p2{color:#4A7AB5}
 .nav-link.p2:hover{color:var(--burg);border-color:rgba(40,0,30,0.2)}
-@media(max-width:900px){nav{padding:10px 20px}.nav-links{display:none}}
+/* Mobile nav hamburger */
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--text-primary)}
+.nav-toggle span{display:block;width:20px;height:2px;background:currentColor;margin:4px 0;transition:transform .2s}
+.nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.nav-toggle.open span:nth-child(2){opacity:0}
+.nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+@media(max-width:900px){
+  nav{padding:10px 20px;flex-wrap:wrap}
+  .nav-toggle{display:block}
+  .nav-links{display:none;width:100%;padding:8px 0 4px;gap:2px}
+  .nav-links.open{display:flex}
+}
 
 /* SECTIONS */
 section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
@@ -184,6 +195,9 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
 .venue-marker:hover{transform:scale(1.15)}
 .metro-marker{width:22px;height:22px;background:#0066CC;border:2px solid white;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;color:white}
 .parking-marker{width:18px;height:18px;background:#1E7A45;border:2px solid white;border-radius:3px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;color:white}
+/* Map sidebar */
+.map-sidebar{position:absolute;top:0;right:0;width:340px;height:100%;background:rgba(10,10,10,.95);backdrop-filter:blur(12px);border-left:1px solid rgba(255,255,255,.06);z-index:600;overflow-y:auto;transform:translateX(100%);transition:transform .4s ease}
+.map-sidebar.active{transform:translateX(0)}
 
 /* (removed duplicate MODERATORS MOSAIC — kept below in MOD MOSAIC section) */
 
@@ -398,6 +412,87 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
 .bg-entregables::before{content:'';position:absolute;inset:0;background:rgba(10,10,10,.75);z-index:0}
 .bg-entregables>.inner,.bg-entregables>.stag{position:relative;z-index:1}
 
+/* ACTION PLAN */
+.ap-item{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:12px;margin-bottom:8px;transition:border-color .2s}
+.ap-item:hover{border-color:rgba(160,0,34,.25)}
+.ap-priority{font-family:var(--mono);font-size:7px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:700}
+.ap-priority-critical{color:#FD2F33}
+.ap-priority-high{color:#F5A623}
+.ap-priority-medium{color:#5B8DEF}
+.ap-title{font-size:13px;color:white;font-weight:600;margin-bottom:4px}
+.ap-desc{font-size:11px;color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:8px}
+.ap-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ap-tag{font-family:var(--mono);font-size:7px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.3);background:rgba(255,255,255,.04);padding:2px 8px;border-radius:2px}
+.ap-owner{font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke);margin-left:auto}
+
+/* NARRATIVE BLOCKS */
+.narr-block{background:rgba(255,255,255,.03);border-left:3px solid var(--red);padding:24px 28px;margin-bottom:20px;border-radius:0 4px 4px 0}
+.narr-callout{background:rgba(253,47,51,.06);border:1px solid rgba(253,47,51,.12);padding:16px 20px;margin-top:14px;border-radius:4px;font-size:14px;line-height:1.7;color:rgba(255,255,255,.7)}
+.narr-callout strong{color:white}
+.narr-transition{text-align:center;font-size:15px;font-weight:500;color:var(--smoke);padding:40px 0;font-style:italic}
+.narr-step{display:flex;gap:20px;margin-bottom:32px}
+.narr-step-num{font-size:42px;font-weight:700;color:rgba(253,47,51,.2);font-family:var(--mono);line-height:1;min-width:52px;flex-shrink:0}
+.narr-step-body{flex:1}
+.narr-step-title{font-size:16px;font-weight:600;color:white;margin-bottom:6px}
+.narr-step-text{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7}
+.narr-step-text strong{color:rgba(255,255,255,.85)}
+.narr-spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.narr-spec{background:rgba(255,255,255,.04);padding:10px 14px;border-radius:3px;font-family:var(--mono);font-size:9px;letter-spacing:.5px;color:rgba(255,255,255,.5)}
+.narr-spec strong{color:rgba(255,255,255,.8);display:block;font-family:var(--sans);font-size:11px;letter-spacing:0;margin-bottom:2px}
+.narr-query{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);padding:14px 18px;margin-bottom:10px;border-radius:4px}
+.narr-query-q{font-size:12px;color:var(--smoke);font-style:italic;margin-bottom:6px}
+.narr-query-a{font-size:11px;color:rgba(255,255,255,.5);line-height:1.6}
+.narr-power{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);padding:24px 28px;margin-bottom:16px;border-radius:4px;display:flex;gap:20px;transition:border-color .3s}
+.narr-power:hover{border-color:rgba(160,0,34,.2)}
+.narr-power-num{font-size:48px;font-weight:700;color:rgba(253,47,51,.12);font-family:var(--mono);line-height:1;min-width:56px;flex-shrink:0}
+.narr-power-content{flex:1}
+.narr-power-title{font-size:16px;font-weight:600;color:white;margin-bottom:6px}
+.narr-power-body{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7}
+.narr-power-quote{font-size:12px;color:var(--smoke);font-style:italic;margin-top:10px;padding-left:14px;border-left:2px solid rgba(160,0,34,.3)}
+.narr-power-hero{border-left:3px solid var(--red);background:rgba(253,47,51,.03)}
+@media(max-width:768px){
+  .narr-spec-grid{grid-template-columns:1fr}
+  .narr-step{flex-direction:column;gap:8px}
+  .narr-step-num{font-size:28px}
+  .narr-power{flex-direction:column;gap:8px}
+  .narr-power-num{font-size:32px}
+  .narr-block{padding:18px 20px}
+}
+
+/* ── COMPREHENSIVE MOBILE FIXES ── */
+@media(max-width:768px){
+  /* Dashboard tabs scroll horizontal */
+  .dash-topbar{flex-direction:column;gap:8px;align-items:flex-start}
+  #dash-tabs{overflow-x:auto;white-space:nowrap;width:100%;-webkit-overflow-scrolling:touch}
+  /* Dashboard video overlay stack */
+  .dash-video-overlay{flex-direction:column;gap:8px;padding:12px 16px;text-align:center}
+  .dash-video{padding-top:56%}
+  /* Timeline labels wrap */
+  .dash-tl-labels{flex-wrap:wrap;gap:8px}
+  /* Speaker card stack */
+  .dash-speaker{flex-direction:column;gap:8px}
+  /* Action plan: stack columns */
+  #dash-panel-actionplan>div{grid-template-columns:1fr!important;height:auto!important}
+  #dash-panel-actionplan>div>div:last-child{border-left:none;border-top:1px solid rgba(255,255,255,.06);padding-left:0;padding-top:16px;margin-top:16px}
+  #ap-chat-messages{max-height:300px}
+  /* Search panel border fix */
+  .dash-search-panel{border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}
+  /* Map section */
+  #map-section{padding:80px 0 0}
+  #map-header{padding:0 20px 20px}
+  #map-container{height:50vh}
+  .map-legend{bottom:10px;left:10px;padding:10px 14px}
+  /* Map sidebar */
+  .map-sidebar{position:relative!important;width:100%!important;max-height:40vh;top:auto!important;right:auto!important}
+  /* Modal */
+  .modal-box{margin:20px;max-height:85vh}
+  /* ROI grid */
+  .pax-wrap{flex-direction:column}
+  .pax-vs{display:none}
+  /* Incentive grid */
+  .incentive-grid{grid-template-columns:1fr!important}
+}
+
 /* ANIM */
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .anim{opacity:0}
@@ -413,7 +508,8 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-logo">WAV<span>·</span>BTL</div>
-  <div class="nav-links">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menú"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="nav-links">
     <a href="#hero" class="nav-link active">Inicio</a>
     <a href="#contexto" class="nav-link">Contexto</a>
     <a href="#campo" class="nav-link">Campo</a>
@@ -831,35 +927,34 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
       <div class="td-step" style="border-bottom-color:var(--red)"><div class="td-day" style="color:var(--red)">×4</div><div class="td-label" style="color:var(--red)">Ciclos / año</div></div>
     </div>
     <div class="deliver-grid anim anim-d3">
-      <div class="deliver-card" data-modal="m-video">
+      <div class="deliver-card">
         <div class="deliver-icon">🎬</div>
         <div class="deliver-title">4 Videos · 1 día por sesión</div>
         <ul class="deliver-list">
-          <li>1 día grabado por sesión (elección previa)</li>
-          <li>Edición highlight 5–8 min</li>
-          <li>Subtítulos en inglés</li>
-          <li>Formato MP4 HD</li>
+          <li>1 día grabado por sesión (elección previa MG)</li>
+          <li>Edición highlight 5–8 min con momentos clave</li>
+          <li>Subtítulos en inglés para casa matriz</li>
+          <li>Formato MP4 HD · Entrega D+5</li>
         </ul>
       </div>
-      <div class="deliver-card" data-modal="m-reporte">
+      <div class="deliver-card">
         <div class="deliver-icon">📄</div>
         <div class="deliver-title">4 Informes PDF bilingüe</div>
         <ul class="deliver-list">
-          <li>Resumen ejecutivo (1 pág)</li>
-          <li>Insights por tema</li>
-          <li>Verbatims seleccionados</li>
-          <li>Recomendaciones accionables</li>
-          <li>Español + Inglés</li>
+          <li>Resumen ejecutivo 1 pág para directivos</li>
+          <li>Insights por tema + verbatims con atribución</li>
+          <li>Recomendaciones con responsable MG sugerido</li>
+          <li>Español + Inglés · Entrega D+10</li>
         </ul>
       </div>
-      <div class="deliver-card" data-modal="m-convoc-report">
+      <div class="deliver-card">
         <div class="deliver-icon">📊</div>
         <div class="deliver-title">Informe de convocatoria</div>
         <ul class="deliver-list">
-          <li>KPIs: invitados / confirmados</li>
-          <li>Tasa de asistencia real</li>
-          <li>Perfil de asistentes</li>
-          <li>No-shows documentados</li>
+          <li>KPIs: invitados / confirmados / asistentes</li>
+          <li>Tasa de asistencia real vs objetivo</li>
+          <li>Perfil de asistentes (segmento, modelo, zona)</li>
+          <li>No-shows documentados con motivo</li>
         </ul>
       </div>
     </div>
@@ -930,49 +1025,208 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
   <div class="stag" style="opacity:.3"><div class="stag-word" style="color:var(--red)">PAIN</div><div class="stag-bar" style="background:var(--red)"></div></div>
 </section>
 
-<!-- ═══ SLIDE 12 — WAV INTELLIGENCE ══════════════ -->
+<!-- ═══ SLIDE 12 — WAV INTELLIGENCE · NARRATIVA ══════════════ -->
+
+<!-- ── CAPÍTULO 1: APERTURA ── -->
 <section id="intelligence" style="background:var(--burg)">
-  <div class="inner">
+  <div class="inner-narrow">
     <div class="label anim" style="color:var(--smoke)">WAV Intelligence</div>
     <div class="section-title section-title-w anim anim-d1">
       Del focus group al sistema de<br><span class="hw hw-w" style="font-size:1.4em">inteligencia</span><span style="font-weight:300;color:rgba(255,255,255,.6)"> viva.</span>
     </div>
-    <p class="lead anim anim-d2" style="color:rgba(255,255,255,.45)">Arquitectura de captura, procesamiento e inteligencia. Haz click en cada módulo para ver el detalle.</p>
-    <div class="arch anim anim-d3">
-      <div class="arch-row">
-        <div class="arch-lbl">Captura</div>
-        <div class="arch-items">
-          <div class="arch-item" data-modal="m-lav"><div class="arch-name">🎙 20× Lavalier individual</div><div class="arch-desc">Grabación 32-bit float por participante · microSD independiente · 14 voces + 6 respaldo</div></div>
-          <div class="arch-item" data-modal="m-360"><div class="arch-name">📷 Cámara 360°</div><div class="arch-desc">Eje de sincronización · video + audio por timestamp</div></div>
-        </div>
+    <div class="anim anim-d2" style="max-width:620px;margin-top:24px">
+      <p style="font-size:15px;line-height:1.8;color:rgba(255,255,255,.55)">Un focus group tradicional produce un video y un PDF. <strong style="color:white">240 personas al año te dicen exactamente qué piensan</strong> — y tú recibes un resumen de 20 páginas que nadie vuelve a abrir en marzo.</p>
+      <p style="font-size:15px;line-height:1.8;color:rgba(255,255,255,.55);margin-top:14px">Lo que proponemos no es un mejor informe. Es un <strong style="color:white">cambio de arquitectura</strong>: cada voz grabada individualmente, cada opinión atribuida por nombre, cada dato buscable y cruzable entre sesiones. Un sistema que acumula inteligencia en vez de archivarla.</p>
+    </div>
+    <div class="narr-transition anim anim-d3">Todo empieza con una decisión de arquitectura.</div>
+  </div>
+</section>
+
+<!-- ── CAPÍTULO 2: CAPTURA ── -->
+<section style="background:var(--burg);padding-top:0">
+  <div class="inner-narrow">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:20px" class="anim">Captura · Capa 1</div>
+
+    <!-- Lavalier -->
+    <div class="narr-block anim">
+      <div style="font-size:17px;font-weight:600;color:white;margin-bottom:8px">🎙 20× Lavalier individual · grabación 32-bit float</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">Cada participante lleva su propio micrófono con grabación totalmente independiente en tarjeta microSD. El audio de cada persona se graba por separado, sin interferencia ni dependencia de red.</p>
+      <div class="narr-spec-grid" style="margin-top:14px">
+        <div class="narr-spec"><strong>32-bit float</strong>Rango dinámico masivo — sin clipping posible</div>
+        <div class="narr-spec"><strong>microSD independiente</strong>Sin falla de red · cada pista autónoma</div>
+        <div class="narr-spec"><strong>14 activos + 6 respaldo</strong>Redundancia total en campo</div>
+        <div class="narr-spec"><strong>Post-producción perfecta</strong>Cada voz aislada = mezcla precisa</div>
       </div>
-      <div class="arch-arr">↓</div>
-      <div class="arch-row">
-        <div class="arch-lbl">Proceso</div>
-        <div class="arch-items">
-          <div class="arch-item" data-modal="m-diar"><div class="arch-name">🔤 Transcripción + diarización</div><div class="arch-desc">Quién dijo qué · timestamp exacto · atribución por nombre</div></div>
-          <div class="arch-item" data-modal="m-perfil"><div class="arch-name">🏷 Perfilamiento</div><div class="arch-desc">Modelo MG · edad · historial · segmento</div></div>
-          <div class="arch-item" data-modal="m-sync"><div class="arch-name">🔗 Sincronización A/V</div><div class="arch-desc">Audio individual anclado al video 360° por timestamp</div></div>
-        </div>
+      <div class="narr-callout">Cuando 4 personas hablan a la vez en un focus group tradicional, el audio se pierde. Aquí, <strong>cada voz existe en su propia pista</strong>. Nada se pierde. Nunca.</div>
+    </div>
+
+    <!-- 360° -->
+    <div class="narr-block anim anim-d1">
+      <div style="font-size:17px;font-weight:600;color:white;margin-bottom:8px">📷 Cámara 360° — el eje de sincronización</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">La cámara 360° no es una herramienta de análisis — es la <strong style="color:rgba(255,255,255,.8)">infraestructura de navegación</strong> del sistema completo. Un solo archivo de video captura a todos los participantes simultáneamente, y permite que las 20 pistas de audio se anclen a una referencia visual única.</p>
+      <div class="narr-callout">Buscas "precio" en el dashboard → el sistema encuentra la pista de audio → <strong>el video 360° ya está sincronizado</strong> → ves quién lo dijo y cómo reaccionó toda la mesa.</div>
+    </div>
+
+    <div class="narr-transition anim anim-d2">20 pistas de audio. 1 video omnidireccional.<br>Ahora hay que convertirlo en conocimiento.</div>
+  </div>
+</section>
+
+<!-- ── CAPÍTULO 3: PROCESO ── -->
+<section style="background:var(--dgray)">
+  <div class="inner-narrow">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:8px" class="anim">Proceso · Capa 2</div>
+    <div style="font-size:clamp(22px,3vw,32px);font-weight:700;color:white;margin-bottom:8px" class="anim anim-d1">3 capas de inteligencia</div>
+    <p style="font-size:14px;color:rgba(255,255,255,.4);margin-bottom:36px" class="anim anim-d1">Donde otros entregan un archivo, nosotros construimos un sistema.</p>
+
+    <!-- Paso 01 -->
+    <div class="narr-step anim">
+      <div class="narr-step-num">01</div>
+      <div class="narr-step-body">
+        <div class="narr-step-title">Transcripción + diarización con nombres</div>
+        <div class="narr-step-text">Con 20 pistas de audio individuales, la diarización es perfecta: <strong>cada voz ya está separada antes del proceso</strong>. No hay confusión entre voces solapadas. Transcripción automática con accuracy &gt;95% en español.<br><br>No hay "Speaker A". Hay <strong>"Felipe García, dueño de ZS EV, 38 años, minuto 23:14"</strong>. Cada fragmento de audio se atribuye automáticamente a su hablante con timestamp exacto.</div>
       </div>
-      <div class="arch-arr">↓</div>
-      <div class="arch-row">
-        <div class="arch-lbl">Output</div>
-        <div class="arch-items">
-          <div class="arch-item" data-modal="m-dash"><div class="arch-name">📊 Dashboard navegable</div><div class="arch-desc">Video 360° · timeline · búsqueda semántica · keypoints</div></div>
-          <div class="arch-item" data-modal="m-search"><div class="arch-name">🔍 Pregunta libre</div><div class="arch-desc">"¿qué dijo el segmento ZS sobre precio?" → clips exactos</div></div>
-          <div class="arch-item" data-modal="m-trend"><div class="arch-name">📈 Tendencias cross-sesión</div><div class="arch-desc">Comparación entre las 4 sesiones del año</div></div>
+    </div>
+
+    <!-- Paso 02 -->
+    <div class="narr-step anim anim-d1">
+      <div class="narr-step-num">02</div>
+      <div class="narr-step-body">
+        <div class="narr-step-title">Perfilamiento individual de asistentes</div>
+        <div class="narr-step-text">Cada participante tiene ficha enriquecida <strong>antes</strong> de entrar a la sala. Nombre completo, segmento demográfico, modelo MG que posee o cotizó, tiempo como cliente, etapa del proceso de compra.<br><br>El facilitador y el equipo MG saben con quién están hablando en tiempo real. La composición del grupo no es casualidad — <strong>es diseño estratégico</strong>: dueños de ZS junto al próximo modelo eléctrico en sala.</div>
+      </div>
+    </div>
+
+    <!-- Paso 03 -->
+    <div class="narr-step anim anim-d2">
+      <div class="narr-step-num">03</div>
+      <div class="narr-step-body">
+        <div class="narr-step-title">Sincronización Audio / Video / Texto</div>
+        <div class="narr-step-text">Cada pista de audio individual queda anclada al video 360° por timestamp. El resultado: en el dashboard, cada momento tiene <strong>3 capas sincronizadas</strong>:</div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:14px">🎙</span><span style="font-size:12px;color:rgba(255,255,255,.55)">La pista de audio del hablante exacto</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:14px">📷</span><span style="font-size:12px;color:rgba(255,255,255,.55)">El frame del video 360° en ese segundo</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:14px">📝</span><span style="font-size:12px;color:rgba(255,255,255,.55)">El texto transcrito con nombre del hablante</span></div>
         </div>
       </div>
     </div>
-    <div style="margin-top:36px">
-      <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:14px" class="anim">Los 5 superpoderes — click para expandir</div>
-      <div class="power-grid anim anim-d1">
-        <div class="power-card" data-modal="m-p1"><div class="power-num">01</div><div class="power-icon">⚡</div><div class="power-title">Atribución exacta</div><div class="power-body">Cada insight tiene nombre, apellido, modelo de auto y perfil.</div><div class="power-quote">"Busca: dueños de ZS sobre postventa. Obtén los clips exactos."</div><div class="power-click">Expandir →</div></div>
-        <div class="power-card" data-modal="m-p2"><div class="power-num">02</div><div class="power-icon">🧠</div><div class="power-title">Memoria de marca</div><div class="power-body">Compara lo que dijo un cliente en marzo con lo que dice en septiembre.</div><div class="power-quote">"¿Cambió la percepción tras el lanzamiento? Dato exacto."</div><div class="power-click">Expandir →</div></div>
-        <div class="power-card" data-modal="m-p3"><div class="power-num">03</div><div class="power-icon">🎬</div><div class="power-title">Video 360° navegable</div><div class="power-body">Timeline, keypoints de sesión y campo de pregunta libre. Navega 6 hrs en 10 min.</div><div class="power-quote">"Busca 'precio' → salta al min 23:14 → ves a Felipe García y la reacción de toda la mesa."</div><div class="power-click">Expandir →</div></div>
-        <div class="power-card" data-modal="m-p4"><div class="power-num">04</div><div class="power-icon">📈</div><div class="power-title">Panel evolutivo 240→360 perfiles</div><div class="power-body">Un activo de inteligencia que crece con cada sesión.</div><div class="power-quote">"No envejece. No se descarta. Punto de partida para 2027."</div><div class="power-click">Expandir →</div></div>
-        <div class="power-card power-card-wide" data-modal="m-p5"><div class="power-num">05</div><div class="power-icon">🚗</div><div class="power-title">El auto en la sala</div><div class="power-body">El modelo sobre el que MG necesita feedback entra al venue. Los participantes hablan del próximo lanzamiento mirando el próximo lanzamiento. Cada perfil está diseñado estratégicamente.</div><div class="power-quote">"Contexto real = respuestas más honestas = decisiones más precisas."</div><div class="power-click">Expandir →</div></div>
+
+    <div class="narr-transition anim anim-d3">Audio atribuido. Video sincronizado. Perfiles enriquecidos.<br>¿Qué haces con todo eso?</div>
+  </div>
+</section>
+
+<!-- ── CAPÍTULO 4: OUTPUT ── -->
+<section style="background:var(--burg)">
+  <div class="inner-narrow">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:8px" class="anim">Output · Capa 3</div>
+    <div style="font-size:clamp(22px,3vw,32px);font-weight:700;color:white;margin-bottom:8px" class="anim anim-d1">Un dashboard. No un PDF.</div>
+    <p style="font-size:14px;color:rgba(255,255,255,.4);margin-bottom:32px" class="anim anim-d1">La diferencia entre archivar y decidir.</p>
+
+    <!-- Dashboard -->
+    <div class="narr-block anim anim-d2">
+      <div style="font-size:15px;font-weight:600;color:white;margin-bottom:8px">📊 Dashboard navegable privado</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">Un panel web privado para el equipo MG. Video 360° con timeline clickable, keypoints automáticos, búsqueda semántica por tema o participante, y campo de pregunta libre. Acumula datos sesión a sesión — al cierre del año tienes un activo de inteligencia, no 4 reportes sueltos.</p>
+    </div>
+
+    <!-- Pregunta libre -->
+    <div class="narr-block anim anim-d3">
+      <div style="font-size:15px;font-weight:600;color:white;margin-bottom:12px">🔍 Campo de pregunta libre</div>
+      <p style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:14px">Pregunta cualquier cosa sobre la sesión. Obtén clips exactos con perfil del hablante.</p>
+      <div class="narr-query">
+        <div class="narr-query-q">"¿Qué dijeron los dueños de ZS sobre el servicio post-venta?"</div>
+        <div class="narr-query-a">→ 4 clips · Sergio Martinez (ZS Trophy, 42 años, 0:45:30), Daisy Córdova (ZS EV, 38 años, 1:20:30)…</div>
+      </div>
+      <div class="narr-query">
+        <div class="narr-query-q">"¿Cuándo fue el momento de mayor entusiasmo en la sesión?"</div>
+        <div class="narr-query-a">→ Min 0:14:51 · César Ulloa habla del techo panorámico · video 360° sincronizado</div>
+      </div>
+      <div class="narr-query">
+        <div class="narr-query-q">"¿Qué temas aparecieron espontáneamente sin ser preguntados?"</div>
+        <div class="narr-query-a">→ Depreciación + bonos opacos — 5 de 8 participantes, no fue preguntado directamente</div>
+      </div>
+    </div>
+
+    <!-- Tendencias -->
+    <div class="narr-block anim anim-d4">
+      <div style="font-size:15px;font-weight:600;color:white;margin-bottom:8px">📈 Tendencias cross-sesión</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">La verdadera inteligencia no está en una sesión — está en <strong style="color:rgba(255,255,255,.8)">cómo evolucionan las percepciones entre sesiones</strong>.</p>
+      <div style="margin-top:12px;font-size:12px;color:rgba(255,255,255,.45);line-height:2">
+        ¿Cambió la percepción de precio tras el lanzamiento del nuevo modelo?<br>
+        ¿Los clientes de marzo hablan diferente sobre postventa que los de septiembre?<br>
+        ¿Qué temas emergieron este año que no existían antes?
+      </div>
+      <div class="narr-callout" style="margin-top:14px">Al cierre de diciembre: <strong>informe anual consolidado</strong> con tendencias comparativas entre las 4 sesiones. Base de planificación para 2027.</div>
+    </div>
+  </div>
+  <div style="padding:20px 0 0;text-align:center">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);text-transform:uppercase" class="anim">↓ Vista previa del dashboard real a continuación</div>
+  </div>
+</section>
+
+<!-- ── (dashboard_mockup.html se inyecta aquí por build.py) ── -->
+
+<!-- ── CAPÍTULO 5: SUPERPODERES ── -->
+<section style="background:var(--dgray)">
+  <div class="inner-narrow">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:8px" class="anim">Capacidades</div>
+    <div style="font-size:clamp(22px,3vw,32px);font-weight:700;color:white;margin-bottom:8px" class="anim anim-d1">5 cosas que un PDF nunca va a poder hacer.</div>
+    <p style="font-size:14px;color:rgba(255,255,255,.4);margin-bottom:36px" class="anim anim-d1">Lo que separa un informe que se archiva de un sistema que se consulta.</p>
+
+    <!-- Poder 01 -->
+    <div class="narr-power anim">
+      <div class="narr-power-num">01</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">⚡ Atribución exacta</div>
+        <div class="narr-power-body">Cada insight tiene nombre, apellido, modelo de auto y perfil completo. No más "alguien dijo que el infotainment es difícil." Con WAV Intelligence: <strong style="color:rgba(255,255,255,.8)">"Felipe García, dueño de ZS EV, 38 años, 23:14 — 'el infotainment se congela cuando enciendo el aire'."</strong> Ese dato es accionable. El PDF no lo puede dar.</div>
+        <div class="narr-power-quote">"Busca: dueños de ZS sobre postventa. Obtén los clips exactos."</div>
+      </div>
+    </div>
+
+    <!-- Poder 02 -->
+    <div class="narr-power anim anim-d1">
+      <div class="narr-power-num">02</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">🧠 Memoria de marca</div>
+        <div class="narr-power-body">Compara lo que dijo un cliente en marzo con lo que dice en septiembre. ¿Cambió su percepción después del lanzamiento? Los 4 focus groups no son 4 eventos separados — son <strong style="color:rgba(255,255,255,.8)">4 puntos en una línea de tiempo de evolución de percepciones</strong>. El dashboard muestra esa línea en tiempo real.</div>
+        <div class="narr-power-quote">"¿Cambió la percepción tras el lanzamiento? Dato exacto, no anécdota."</div>
+      </div>
+    </div>
+
+    <!-- Poder 03 -->
+    <div class="narr-power anim anim-d2">
+      <div class="narr-power-num">03</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">🎬 Video 360° navegable</div>
+        <div class="narr-power-body">No hay que ver las 6 horas. Escribes "garantía" en el buscador → el sistema identifica todos los momentos → te muestra clips con speaker, timestamp y contexto → click y el video 360° abre exactamente en ese segundo. <strong style="color:rgba(255,255,255,.8)">Navega 6 horas de contenido en 10 minutos.</strong></div>
+        <div class="narr-power-quote">"Busca 'precio' → salta al min 23:14 → ves a Felipe García y la reacción de toda la mesa."</div>
+      </div>
+    </div>
+
+    <!-- Poder 04 -->
+    <div class="narr-power anim anim-d3">
+      <div class="narr-power-num">04</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">📈 Panel evolutivo · 240→360 perfiles</div>
+        <div class="narr-power-body">Al final del año tienes 240–360 perfiles de cliente construidos sesión a sesión. Cada perfil incluye: datos del vehículo, verbatims atribuidos, evolución de percepciones, y segmento para análisis cruzado. <strong style="color:rgba(255,255,255,.8)">Un activo de inteligencia que no existe en ningún otro lugar.</strong></div>
+        <div class="narr-power-quote">"No envejece. No se descarta. Es el punto de partida para 2027."</div>
+      </div>
+    </div>
+
+    <!-- Poder 05 — HERO -->
+    <div class="narr-power narr-power-hero anim anim-d4">
+      <div class="narr-power-num">05</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">🚗 El auto en la sala</div>
+        <div class="narr-power-body">El modelo sobre el que MG necesita feedback <strong style="color:rgba(255,255,255,.8)">entra al venue</strong>. Los participantes hablan del próximo lanzamiento mirándolo. La selección de participantes se cruza con el modelo presente: dueños de ZS hablan del ZS, cotizantes del próximo EV lo ven en persona. Cada perfil está diseñado estratégicamente para generar el feedback que MG necesita.</div>
+        <div class="narr-power-quote">"Contexto real = respuestas más honestas = decisiones más precisas."</div>
+      </div>
+    </div>
+
+    <!-- Cierre argumentativo -->
+    <div style="margin-top:40px;max-width:560px" class="anim">
+      <p style="font-size:15px;line-height:1.8;color:rgba(255,255,255,.55)">El estándar de la industria es un PDF y un video. Eso era aceptable cuando la investigación cualitativa era una foto fija.</p>
+      <p style="font-size:15px;line-height:1.8;color:rgba(255,255,255,.55);margin-top:14px">Pero cuando tienes <strong style="color:white">240 a 360 voces perfiladas al año</strong>, atribuibles por nombre, buscables por tema, comparables en el tiempo — ya no estás haciendo focus groups. Estás construyendo un <strong style="color:white">sistema de inteligencia viva</strong>.</p>
+      <div style="margin-top:24px;padding:20px 24px;border-left:3px solid var(--red);background:rgba(253,47,51,.04)">
+        <p style="font-size:16px;font-weight:600;color:white;line-height:1.6">La diferencia entre datos que se archivan y datos que se consultan.<br><span style="color:var(--smoke)">Entre un reporte que expira y una base de conocimiento que se capitaliza.</span></p>
       </div>
     </div>
   </div>
@@ -1008,6 +1262,7 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
           <span class="dash-tab dash-tab-active" data-tab="sesion">Sesión</span>
           <span class="dash-tab" data-tab="perfiles">Perfiles</span>
           <span class="dash-tab" data-tab="tendencias">Tendencias</span>
+          <span class="dash-tab" data-tab="actionplan">Action Plan</span>
           <span class="dash-tab" data-tab="exportar">Exportar</span>
         </div>
       </div>
@@ -1228,6 +1483,202 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
         </div>
       </div>
 
+      <!-- ══ PANEL: Action Plan ══ -->
+      <div id="dash-panel-actionplan" style="display:none;padding:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;height:480px">
+
+          <!-- Left: Action Items -->
+          <div style="display:flex;flex-direction:column;overflow:hidden">
+            <div class="dash-panel-label" style="margin-bottom:12px">Plan de acción · Generado por IA</div>
+
+            <!-- Priority filters -->
+            <div style="display:flex;gap:4px;margin-bottom:12px">
+              <span class="dash-filter dash-filter-active" data-priority="all" id="ap-filter-all">Todos</span>
+              <span class="dash-filter" data-priority="critical" id="ap-filter-critical">Crítico</span>
+              <span class="dash-filter" data-priority="high" id="ap-filter-high">Alto</span>
+              <span class="dash-filter" data-priority="medium" id="ap-filter-medium">Medio</span>
+            </div>
+
+            <!-- Action items list -->
+            <div style="flex:1;overflow-y:auto;padding-right:6px" id="ap-items-list">
+
+              <!-- Critical items -->
+              <div class="ap-item" data-priority="critical">
+                <div class="ap-priority ap-priority-critical">CRÍTICO</div>
+                <div class="ap-title">Estabilizar software infotainment</div>
+                <div class="ap-desc">28 menciones negativas. Pantalla se congela, Android Auto falla, clima se bloquea en reversa. OTA urgente Q2 2026.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Infotainment</span>
+                  <span class="ap-tag">6 sesiones</span>
+                  <span class="ap-owner">→ Producto + Ingeniería</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="critical">
+                <div class="ap-priority ap-priority-critical">CRÍTICO</div>
+                <div class="ap-title">Política de precios transparente</div>
+                <div class="ap-desc">22 menciones. Bonos opacos, depreciación agresiva post-compra. Implementar precio neto sin descuentos ocultos.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Precio</span>
+                  <span class="ap-tag">5 sesiones</span>
+                  <span class="ap-owner">→ Comercial + Marketing</span>
+                </div>
+              </div>
+
+              <!-- High items -->
+              <div class="ap-item" data-priority="high">
+                <div class="ap-priority ap-priority-high">ALTO</div>
+                <div class="ap-title">Stock de repuestos críticos en Chile</div>
+                <div class="ap-desc">18 menciones postventa. Espera promedio 15-25 días. Meta: repuestos de desgaste en 48 horas.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Postventa</span>
+                  <span class="ap-tag">5 sesiones</span>
+                  <span class="ap-owner">→ Supply Chain + Postventa</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="high">
+                <div class="ap-priority ap-priority-high">ALTO</div>
+                <div class="ap-title">Alarma incluida de serie</div>
+                <div class="ap-desc">14 menciones seguridad. Alarma con sensor movimiento debe venir de fábrica. Incidente de robo post-concesionaria reportado.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Seguridad</span>
+                  <span class="ap-tag">4 sesiones</span>
+                  <span class="ap-owner">→ Producto</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="high">
+                <div class="ap-priority ap-priority-high">ALTO</div>
+                <div class="ap-title">Red de carga EV + convenio Copec Voltex</div>
+                <div class="ap-desc">Dueños EV reportan incompatibilidad de conectores y falta de puntos de carga. Alianza con red existente.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">EV</span>
+                  <span class="ap-tag">3 sesiones</span>
+                  <span class="ap-owner">→ Estrategia + Alianzas</span>
+                </div>
+              </div>
+
+              <!-- Medium items -->
+              <div class="ap-item" data-priority="medium">
+                <div class="ap-priority ap-priority-medium">MEDIO</div>
+                <div class="ap-title">Modernizar app myMG</div>
+                <div class="ap-desc">App percibida como abandonada. Agregar: estado de carga EV, agendamiento servicio, notificaciones recalls.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Digital</span>
+                  <span class="ap-tag">4 sesiones</span>
+                  <span class="ap-owner">→ Producto Digital</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="medium">
+                <div class="ap-priority ap-priority-medium">MEDIO</div>
+                <div class="ap-title">Programa embajadores MG</div>
+                <div class="ap-desc">Clientes promotores orgánicos identificados. Crear programa con beneficios: descuentos mantención, acceso anticipado modelos.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Marketing</span>
+                  <span class="ap-tag">3 sesiones</span>
+                  <span class="ap-owner">→ Marketing + CRM</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="medium">
+                <div class="ap-priority ap-priority-medium">MEDIO</div>
+                <div class="ap-title">Comunicación proactiva de recalls</div>
+                <div class="ap-desc">Clientes se enteran por Facebook. Implementar SMS + email + push app para recalls y actualizaciones.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Comunicaciones</span>
+                  <span class="ap-tag">2 sesiones</span>
+                  <span class="ap-owner">→ CX + Comunicaciones</span>
+                </div>
+              </div>
+
+              <div class="ap-item" data-priority="medium">
+                <div class="ap-priority ap-priority-medium">MEDIO</div>
+                <div class="ap-title">Contenido redes sociales para jóvenes</div>
+                <div class="ap-desc">RRSS percibidas como "fomes". Estrategia TikTok/Reels con testimonios reales de dueños sub-35.</div>
+                <div class="ap-meta">
+                  <span class="ap-tag">Marketing</span>
+                  <span class="ap-tag">2 sesiones</span>
+                  <span class="ap-owner">→ Marketing Digital</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: AI Chat -->
+          <div style="display:flex;flex-direction:column;border-left:1px solid rgba(255,255,255,.06);padding-left:16px">
+            <div class="dash-panel-label" style="margin-bottom:12px">
+              <span style="display:inline-flex;align-items:center;gap:6px">
+                <span style="width:6px;height:6px;border-radius:50%;background:#4CAF78;display:inline-block"></span>
+                WAV AI · Asistente de insights
+              </span>
+            </div>
+
+            <!-- Chat messages area -->
+            <div style="flex:1;overflow-y:auto;padding-right:4px" id="ap-chat-messages">
+              <!-- System message -->
+              <div style="margin-bottom:12px">
+                <div style="background:rgba(160,0,34,.08);border:1px solid rgba(160,0,34,.15);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">
+                  <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:6px">WAV AI · Resumen automático</div>
+                  Analicé <strong style="color:white">6 sesiones</strong>, <strong style="color:white">44 participantes</strong> y <strong style="color:white">114 verbatims</strong>. Los tres temas más urgentes son: infotainment (28 menciones negativas), precio/depreciación (22), y postventa (18). ¿En qué tema quieres profundizar?
+                </div>
+              </div>
+
+              <!-- Example user message -->
+              <div style="margin-bottom:12px;display:flex;justify-content:flex-end">
+                <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.75);max-width:80%;line-height:1.5">
+                  ¿Cuáles son los perfiles más críticos con el infotainment?
+                </div>
+              </div>
+
+              <!-- AI response -->
+              <div style="margin-bottom:12px">
+                <div style="background:rgba(160,0,34,.05);border:1px solid rgba(160,0,34,.1);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">
+                  <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:6px">WAV AI</div>
+                  Los perfiles más críticos con infotainment son:<br><br>
+                  <strong style="color:white">1. Tomás Figueroa</strong> (Developer, 28 años) — Describe el sistema como "Android 8 en era de Android 16". Pide actualizaciones OTA.<br>
+                  <strong style="color:white">2. César Ulloa</strong> (Empresario, 45 años) — Cambió de auto por la pantalla táctil. "Software viejo, como teléfono de hace 5 años".<br>
+                  <strong style="color:white">3. Juan Carlos Pinar</strong> (Ventas, 50 años) — Reporta bloqueo de clima al usar reversa. Bug funcional.<br><br>
+                  <span style="color:var(--smoke)">Patrón común:</span> usuarios con referente tecnológico alto (developer, empresario tech) son los más vocales. Usuarios mayores toleran más.
+                </div>
+              </div>
+
+              <!-- Example user message -->
+              <div style="margin-bottom:12px;display:flex;justify-content:flex-end">
+                <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.75);max-width:80%;line-height:1.5">
+                  ¿Qué acción concreta propones para Q2?
+                </div>
+              </div>
+
+              <!-- AI response -->
+              <div style="margin-bottom:12px">
+                <div style="background:rgba(160,0,34,.05);border:1px solid rgba(160,0,34,.1);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">
+                  <div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:6px">WAV AI</div>
+                  <strong style="color:white">Recomendación Q2 2026:</strong><br><br>
+                  <span style="color:#FD2F33">●</span> <strong style="color:white">OTA de emergencia</strong> — Fix bug reversa/clima, mejorar respuesta táctil. ETA: 6 semanas.<br>
+                  <span style="color:#F5A623">●</span> <strong style="color:white">Tutorial en entrega</strong> — Video 3 min en tablet durante handover. Reduce frustración 40% (benchmark Hyundai).<br>
+                  <span style="color:#4CAF78">●</span> <strong style="color:white">Canal WhatsApp soporte tech</strong> — Línea directa para problemas de conectividad. Costo bajo, impacto alto.<br><br>
+                  <span style="color:var(--smoke)">Impacto estimado:</span> Frustración infotainment de 7.1 → 5.5 en medición Q3.
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat input -->
+            <div style="margin-top:12px;border-top:1px solid rgba(255,255,255,.06);padding-top:12px">
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="text" id="ap-chat-input" placeholder="Pregunta sobre los datos, pide análisis, sugiere acciones..." style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:10px 14px;color:rgba(255,255,255,.7);font-size:11px;font-family:var(--sans);outline:none;transition:border-color .2s" onfocus="this.style.borderColor='rgba(160,0,34,.3)'" onblur="this.style.borderColor='rgba(255,255,255,.08)'">
+                <button id="ap-chat-send" style="background:var(--red);border:none;border-radius:6px;padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:opacity .2s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                  <span style="color:white;font-family:var(--mono);font-size:8px;letter-spacing:1px;text-transform:uppercase">Enviar</span>
+                </button>
+              </div>
+              <div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.15);text-transform:uppercase;margin-top:8px;text-align:center">Mockup · El chat AI se conectará a los verbatims reales de cada sesión</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ══ PANEL: Exportar ══ -->
       <div id="dash-panel-exportar" style="display:none;padding:32px 16px">
         <div class="dash-panel-label" style="margin-bottom:20px">Exportar datos de sesión</div>
@@ -1419,7 +1870,7 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
 
   /* ── TABS ── */
   var tabsEl = document.getElementById('dash-tabs');
-  var panelIds = ['sesion', 'perfiles', 'tendencias', 'exportar'];
+  var panelIds = ['sesion', 'perfiles', 'tendencias', 'actionplan', 'exportar'];
 
   tabsEl.addEventListener('click', function(e) {
     var tab = e.target.closest('.dash-tab');
@@ -1679,6 +2130,93 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
     }
   });
 
+  /* ── ACTION PLAN FILTERS ── */
+  var apItems = document.querySelectorAll('.ap-item');
+  var apFilterEls = document.querySelectorAll('[data-priority]');
+
+  function filterAP(priority) {
+    for (var j = 0; j < apItems.length; j++) {
+      var item = apItems[j];
+      if (!item.classList.contains('ap-item')) continue;
+      if (priority === 'all' || item.getAttribute('data-priority') === priority) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    }
+    // Update filter buttons
+    var filterBtns = document.querySelectorAll('#dash-panel-actionplan .dash-filter');
+    for (var k = 0; k < filterBtns.length; k++) {
+      filterBtns[k].className = 'dash-filter' + (filterBtns[k].getAttribute('data-priority') === priority ? ' dash-filter-active' : '');
+    }
+  }
+
+  var apFiltersContainer = document.querySelector('#dash-panel-actionplan .dash-filter');
+  if (apFiltersContainer) {
+    apFiltersContainer.parentElement.addEventListener('click', function(e) {
+      var btn = e.target.closest('.dash-filter');
+      if (!btn) return;
+      filterAP(btn.getAttribute('data-priority'));
+    });
+  }
+
+  /* ── CHAT PLACEHOLDER INTERACTION ── */
+  var chatInput = document.getElementById('ap-chat-input');
+  var chatSend = document.getElementById('ap-chat-send');
+  var chatMessages = document.getElementById('ap-chat-messages');
+
+  var CHAT_RESPONSES = [
+    {q: 'depreciación', a: 'La depreciación promedio reportada es de <strong style="color:white">15-20% en 6 meses</strong> post-compra. Sergio Martinez (Day 2 PM) reportó caída de $1M en 3 meses. La causa principal es la política de bonos que distorsiona el precio de lista. <br><br><span style="color:var(--smoke)">Recomendación:</span> precio neto transparente + programa de recompra garantizado al 70% a 3 años.'},
+    {q: 'postventa', a: 'La postventa tiene opiniones polarizadas. <strong style="color:white">Daisy Córdova</strong> reporta servicio excelente ("lavado perfecto"). Pero <strong style="color:white">Gonzalo Muñoz</strong> esperó 22 días por un espejo. <br><br>Promedio de espera repuestos: <strong style="color:white">15-25 días</strong> para piezas no estándar. Talleres autorizados insuficientes (1 en Viña del Mar, 3 semanas de espera).'},
+    {q: 'ev', a: 'Los dueños de EV reportan: autonomía real <strong style="color:white">25% menor</strong> que la publicitada en invierno. Infraestructura de carga deficiente — incompatibilidad de conectores reportada. <br><br>Oportunidad: <strong style="color:white">convenio Copec Voltex</strong> + asistencia instalación cargador domiciliario (hoy el cliente debe buscar por su cuenta).'},
+    {q: 'default', a: 'Interesante pregunta. Basado en los datos de 6 sesiones y 44 participantes, puedo analizar tendencias de sentimiento, comparar perfiles, o profundizar en temas específicos. <br><br>Prueba preguntar sobre: <strong style="color:white">infotainment</strong>, <strong style="color:white">depreciación</strong>, <strong style="color:white">postventa</strong>, <strong style="color:white">EV</strong>, o <strong style="color:white">seguridad</strong>.'}
+  ];
+
+  function addChatMessage(text, isUser) {
+    var div = document.createElement('div');
+    div.style.marginBottom = '12px';
+    if (isUser) {
+      div.style.display = 'flex';
+      div.style.justifyContent = 'flex-end';
+      div.innerHTML = '<div style="background:rgba(255,255,255,.06);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.75);max-width:80%;line-height:1.5">' + text + '</div>';
+    } else {
+      div.innerHTML = '<div style="background:rgba(160,0,34,.05);border:1px solid rgba(160,0,34,.1);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6"><div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:6px">WAV AI</div>' + text + '</div>';
+    }
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function handleChatSend() {
+    if (!chatInput) return;
+    var q = chatInput.value.trim();
+    if (!q) return;
+
+    addChatMessage(q, true);
+    chatInput.value = '';
+
+    var normalQ = normalize(q);
+    var response = CHAT_RESPONSES[CHAT_RESPONSES.length - 1].a; // default
+    for (var j = 0; j < CHAT_RESPONSES.length - 1; j++) {
+      if (normalQ.indexOf(CHAT_RESPONSES[j].q) !== -1) {
+        response = CHAT_RESPONSES[j].a;
+        break;
+      }
+    }
+
+    setTimeout(function() {
+      addChatMessage(response, false);
+    }, 800);
+  }
+
+  if (chatSend) {
+    chatSend.addEventListener('click', handleChatSend);
+  }
+  if (chatInput) {
+    chatInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleChatSend();
+    });
+  }
+
 })();
 </script>
 
@@ -1774,32 +2312,10 @@ section{min-height:100vh;padding:100px 40px 80px;display:flex;flex-direction:col
 <!-- entregables -->
 
 <!-- entregables -->
-<div class="modal-overlay" id="m-video"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">Entregable · Video</div><div class="modal-title">4 Videos · 1 día grabado por sesión</div><div class="modal-body"><div class="modal-hl">Cada sesión produce un video del día elegido por MG (con 2 semanas de anticipación).</div><ul><li>Grabación completa del día con cámara fija y audio limpio del sistema multi-micrófono</li><li>Edición highlight 5–8 minutos con los momentos más relevantes</li><li>Subtítulos en inglés para presentación a casa matriz</li><li>Formato MP4 HD · Entrega: D+5 de la sesión</li></ul></div></div></div>
-<div class="modal-overlay" id="m-reporte"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">Entregable · Reporte</div><div class="modal-title">4 Informes PDF bilingüe</div><div class="modal-body"><div class="modal-hl">Un informe completo por sesión. Resumen ejecutivo + insights + verbatims + recomendaciones accionables. Español + Inglés.</div><ul><li>Resumen ejecutivo de 1 página para directivos</li><li>Insights organizados por tema de conversación</li><li>Verbatims seleccionados con atribución de perfil</li><li>Recomendaciones con responsable MG y métrica de éxito sugerida</li><li>Entrega: D+10 de la sesión</li></ul></div></div></div>
-<div class="modal-overlay" id="m-convoc-report"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">Entregable · Convocatoria</div><div class="modal-title">Informe de convocatoria</div><div class="modal-body"><div class="modal-hl">Transparencia total sobre el proceso de convocatoria de cada sesión.</div><ul><li>Nº invitados contactados / confirmados / asistentes efectivos</li><li>Tasa de asistencia real vs objetivo</li><li>Perfil de asistentes (segmento, modelo MG, zona)</li><li>No-shows documentados con motivo si disponible</li></ul></div></div></div>
-
-<!-- WAV Intelligence modales -->
 
 <!-- intelligence -->
-<div class="modal-overlay" id="m-lav"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">WAV Intelligence · Captura</div><div class="modal-title">20× Lavalier individual · grabación 32-bit float</div><div class="modal-body"><div class="modal-hl">Cada participante lleva su propio micrófono lavalier con grabación totalmente independiente en tarjeta microSD. El audio de cada persona se graba por separado sin interferencia.</div><p><strong>Especificaciones técnicas clave:</strong></p><ul><li>Grabación en <strong>32-bit float</strong> — rango dinámico masivo, sin clipping posible. Si alguien susurra o grita, el audio se recupera perfectamente en post-producción.</li><li><strong>microSD independiente</strong> por unidad — sin red, sin dependencia de consola</li><li>20 unidades: 14 activas (10 invitados + 3 MG + 1 moderador) + 6 de respaldo</li><li>Grabación autónoma — el sistema funciona aunque falle cualquier unidad individual</li></ul><p>El resultado: cualquier verbatim puede ser atribuido exactamente a su autor, con su nombre, perfil y el modelo MG que posee o cotizó.</p></div></div></div>
-<div class="modal-overlay" id="m-360"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">WAV Intelligence · Captura</div><div class="modal-title">Cámara 360° — eje de sincronización</div><div class="modal-body"><div class="modal-hl">La cámara 360° no es una herramienta de análisis — es la infraestructura de navegación del sistema completo. Un solo archivo de video captura a todos los participantes simultáneamente, y permite que las 20 pistas de audio se anclen a una referencia visual única.</div><p><strong>Lo que habilita:</strong></p><ul><li>En el dashboard: buscas "precio" → el sistema identifica en qué pista de audio aparece → te lleva al minuto exacto → el video 360° ya está sincronizado → ves quién lo dijo y cómo reaccionó toda la mesa</li><li>Navegar 6 horas de sesión en 10 minutos buscando por tema</li><li>Compartir clips específicos con casa matriz: quién dijo qué, con contexto visual completo</li><li>Vista omnidireccional: sin ángulo muerto, todos en frame</li></ul></div></div></div>
-<div class="modal-overlay" id="m-diar"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">WAV Intelligence · Proceso</div><div class="modal-title">Transcripción + diarización con nombres</div><div class="modal-body"><div class="modal-hl">Con 20 pistas de audio individuales, la diarización es perfecta: cada voz ya está separada antes del proceso. No hay confusión entre voces solapadas.</div><p>Pipeline:</p><ul><li>Transcripción automática con modelos de última generación (accuracy >95% en español)</li><li>Diarización: cada fragmento de audio se atribuye automáticamente a su hablante</li><li>Identificación por nombre: en lugar de "Speaker A", obtienes "Felipe García"</li><li>Output: transcripción completa con [NOMBRE · Perfil · Min:Seg] para cada frase</li></ul><p>El reporte puede citar "Felipe García, dueño de MG ZS, 38 años, 23:14" en lugar de "un participante mencionó".</p></div></div></div>
-<div class="modal-overlay" id="m-perfil"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">WAV Intelligence · Proceso</div><div class="modal-title">Perfilamiento individual de asistentes</div><div class="modal-body"><div class="modal-hl">Cada participante tiene una ficha enriquecida antes de entrar a la sala. El facilitador y el equipo MG saben con quién están hablando en tiempo real.</div><ul><li>Nombre completo y segmento demográfico</li><li>Modelo MG que posee o cotizó</li><li>Tiempo como cliente o etapa del proceso de compra</li><li>Notas del proceso de convocatoria</li></ul><p>La segmentación avanzada permite diseñar grupos estratégicamente: Grupo A = dueños de ZS EV + el próximo modelo eléctrico en sala.</p></div></div></div>
-<div class="modal-overlay" id="m-sync"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">WAV Intelligence · Proceso</div><div class="modal-title">Sincronización Audio/Video por timestamp</div><div class="modal-body"><div class="modal-hl">Cada pista de audio individual queda anclada al video 360° por timestamp. El resultado es una experiencia de navegación unificada.</div><p>En el dashboard, cada momento tiene 3 capas sincronizadas:</p><ul><li>🎙 La pista de audio del hablante exacto</li><li>📷 El frame del video 360° en ese segundo</li><li>📝 El texto transcrito con el nombre del hablante</li></ul><p>Puedes ir desde la transcripción al video, desde el video al audio individual, o desde una búsqueda semántica al momento exacto — todo sincronizado.</p></div></div></div>
-<div class="modal-overlay" id="m-dash"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">WAV Intelligence · Output</div><div class="modal-title">Dashboard navegable</div><div class="modal-body"><div class="modal-hl">Un panel web privado para el equipo MG. Video 360° con timeline clickable, keypoints automáticos de la sesión, búsqueda semántica y campo de pregunta libre.</div><p><strong>Funciones de navegación:</strong></p><ul><li>Timeline con marcadores de keypoints (temas relevantes detectados automáticamente)</li><li>Click en cualquier punto del timeline → salta al video 360° en ese momento</li><li>Campo de búsqueda: escribe cualquier palabra → todos los momentos donde se mencionó</li><li>Campo de pregunta libre: "¿qué dijo el segmento de cotizantes sobre el precio?" → respuesta con clips</li><li>Se actualiza tras cada sesión — 4 sesiones acumuladas al final del año</li></ul></div></div></div>
-<div class="modal-overlay" id="m-search"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">WAV Intelligence · Output</div><div class="modal-title">Campo de pregunta libre</div><div class="modal-body"><div class="modal-hl">Pregunta cualquier cosa sobre la sesión y obtén una respuesta con los clips exactos de las personas que lo dijeron.</div><p>Ejemplos:</p><ul><li>"¿Qué dijeron los dueños de ZS sobre el servicio post-venta?" → clips con perfil</li><li>"¿Cuándo fue el momento de mayor entusiasmo en la sesión de marzo?" → timestamp + video</li><li>"¿Qué temas aparecieron espontáneamente sin ser preguntados?" → análisis temático</li><li>"¿Cambió la percepción del precio entre la sesión de marzo y la de septiembre?" → comparativa</li></ul></div></div></div>
-<div class="modal-overlay" id="m-trend"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">WAV Intelligence · Output</div><div class="modal-title">Tendencias cross-sesión</div><div class="modal-body"><div class="modal-hl">La verdadera inteligencia no está en una sesión — está en cómo evolucionan las percepciones entre sesiones.</div><ul><li>¿Cambió la percepción de precio tras el lanzamiento del nuevo modelo?</li><li>¿Los clientes de marzo hablan diferente sobre postventa que los de septiembre?</li><li>¿Qué temas emergieron este año que no existían antes?</li></ul><p>Al cierre de diciembre: informe anual consolidado con tendencias para la planificación 2027.</p></div></div></div>
 
 <!-- superpoderes -->
-
-<!-- superpoderes -->
-<div class="modal-overlay" id="m-p1"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">Superpoder 01</div><div class="modal-title">Atribución exacta</div><div class="modal-body"><div class="modal-hl">Cada insight tiene nombre, apellido, modelo de auto y perfil. No más "alguien dijo que el infotainment es difícil."</div><p>Con WAV Intelligence: "Felipe García, dueño de ZS EV, 38 años, 23:14 — 'el infotainment se congela cuando enciendo el aire'." Ese dato es accionable. El PDF no lo puede dar.</p></div></div></div>
-<div class="modal-overlay" id="m-p2"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">Superpoder 02</div><div class="modal-title">Memoria de marca</div><div class="modal-body"><div class="modal-hl">Compara lo que dijo un cliente en marzo con lo que dice en septiembre. ¿Cambió su percepción después del lanzamiento?</div><p>Los 4 focus groups no son 4 eventos separados — son 4 puntos en una línea de tiempo de evolución de percepciones. El dashboard muestra esa línea en tiempo real.</p></div></div></div>
-<div class="modal-overlay" id="m-p3"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">Superpoder 03</div><div class="modal-title">Video 360° navegable</div><div class="modal-body"><div class="modal-hl">No hay que ver las 6 horas. El sistema te lleva directo al momento que necesitas.</div><p>Funcionamiento:</p><ul><li>Escribes "garantía" en el buscador del dashboard</li><li>El sistema identifica todos los momentos donde se mencionó ese tema</li><li>Te muestra una lista de clips con speaker, timestamp y contexto</li><li>Haces click → el video 360° abre exactamente en ese segundo</li><li>Ves quién habló y la reacción de toda la mesa simultáneamente</li></ul><p>6 horas de sesión navegables en menos de 10 minutos.</p></div></div></div>
-<div class="modal-overlay" id="m-p4"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">Superpoder 04</div><div class="modal-title">Panel evolutivo de perfiles</div><div class="modal-body"><div class="modal-hl">Al final del año tienes 240–360 perfiles de cliente construidos sesión a sesión. Un activo que no existe en ningún otro lugar.</div><p>Cada perfil incluye: datos del vehículo, verbatims atribuidos, evolución de percepciones, y segmento de pertenencia para análisis cruzado. No se descarta — es el punto de partida para 2027.</p></div></div></div>
-<div class="modal-overlay" id="m-p5"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div class="modal-tag">Superpoder 05</div><div class="modal-title">El auto en la sala</div><div class="modal-body"><div class="modal-hl">El modelo sobre el que MG necesita feedback entra al venue. Los participantes hablan del próximo lanzamiento mirando el próximo lanzamiento.</div><p>La selección de participantes se cruza con el modelo presente: dueños de ZS hablan del ZS, cotizantes del próximo EV lo ven en persona. Contexto real = respuestas más honestas = decisiones más precisas.</p></div></div></div>
-
-<!-- VENUE MODALES -->
 
 <!-- venues -->
 <div class="modal-overlay" id="m-v1"><div class="modal-box"><button class="modal-close" data-close>Cerrar ✕</button><div style="display:flex;gap:3px;margin-bottom:16px;overflow:hidden"><img src="data:image/jpeg;base64,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" style="width:100%;height:180px;object-fit:cover;flex:1" alt=""></div><div class="modal-tag">Locación · Opción 1 · Recomendada</div><div class="modal-title">Galpón Italia</div><div class="modal-body"><img src="https://experiencias.wherelunch.com/wp-content/uploads/2020/01/galpon-italia-barrio-italia.jpg" class="modal-photo" onerror="this.style.display='none'"><div class="modal-meta"><div class="meta-item"><div class="meta-label">Dirección</div><div class="meta-value">Av. Italia 1175, Ñuñoa</div></div><div class="meta-item"><div class="meta-label">Metro</div><div class="meta-value">Irarrázaval · 5 min a pie</div></div><div class="meta-item"><div class="meta-label">Barrio</div><div class="meta-value">Barrio Italia</div></div><div class="meta-item"><div class="meta-label">Auto MG</div><div class="meta-value">✅ Entra al venue directo</div></div><div class="meta-item"><div class="meta-label">Estacionamientos</div><div class="meta-value">Calles aledañas, gratuito</div></div><div class="meta-item"><div class="meta-label">Capacidad</div><div class="meta-value">Hasta 80 personas</div></div></div><div class="modal-hl">Ex taller mecánico reconvertido en bar-restaurante. El contexto industrial y automotriz es natural para hablar de autos. El modelo MG entra físicamente al espacio sin rampa ni gestión especial.</div><ul><li>Estética industrial: ladrillo expuesto, techos altos — el auto es parte del ambiente</li><li>Gastronomía propia disponible para catering finger food</li><li>Patio interior + terraza + salón: múltiples configuraciones posibles</li><li>Ideal para sesiones de almuerzo o brunch tardío</li><li>Ambiente de barrio creativo que relaja al participante antes de comenzar</li></ul></div></div></div>
@@ -1978,44 +2494,104 @@ document.addEventListener('keydown', function(e){
   }
 });
 
-// ── LEAFLET MAP — retry init + IntersectionObserver + invalidateSize ──
+// ── MOBILE NAV HAMBURGER ──
+(function(){
+  var toggle = document.getElementById('nav-toggle');
+  var links = document.getElementById('nav-links');
+  if(!toggle || !links) return;
+  toggle.addEventListener('click', function(){
+    toggle.classList.toggle('open');
+    links.classList.toggle('open');
+  });
+  links.addEventListener('click', function(e){
+    if(e.target.tagName === 'A'){
+      toggle.classList.remove('open');
+      links.classList.remove('open');
+    }
+  });
+})();
+
+// ── LEAFLET MAP — flyTo + sidebar + IntersectionObserver ──
 document.addEventListener('DOMContentLoaded', function(){
   var mapEl = document.getElementById('leaflet-map');
   if(!mapEl) return;
 
   var map = null;
   var mapInitAttempts = 0;
+  var activeMarker = null;
+
+  // Venue data with details for sidebar
+  var VENUE_DATA = {
+    'm-v1': {name:'Galpón Italia',addr:'Italia 1242, Ñuñoa',cap:'80 pax',feat:'Espacio industrial reconvertido · techos altos · acceso vehicular directo · estacionamiento privado 20 autos',vibe:'Industrial premium. Ideal para mostrar autos en contexto urbano.'},
+    'm-v2': {name:'Club Providencia',addr:'Av. Providencia 2124',cap:'120 pax',feat:'Salón principal + terraza · equipamiento AV incluido · cocina industrial · valet disponible',vibe:'Clásico elegante. Ubicación céntrica, fácil acceso metro.'},
+    'm-v3': {name:'Castillo Ñuñoa',addr:'Jorge Washington 201',cap:'60 pax',feat:'Casa patrimonial · jardín interior · iluminación ambiental · acceso vehicular lateral',vibe:'Íntimo y exclusivo. Grupos pequeños de alto perfil.'},
+    'm-v4': {name:'Providencia Casa',addr:'Guardia Vieja 255',cap:'50 pax',feat:'Casa remodelada · 3 salones conectables · patio trasero cubierto · cocina equipada',vibe:'Residencial cálido. Focus groups que requieren confianza.'},
+    'm-v5': {name:'Galería Patricia Ready',addr:'Espoz 3125, Vitacura',cap:'100 pax',feat:'Galería de arte · espacios blancos amplios · acceso vehicular + rampa · iluminación profesional',vibe:'Vanguardia. El auto como pieza central de una galería.'},
+    'm-v6': {name:'Centro Lyon',addr:'Av. Lyon 0123',cap:'90 pax',feat:'Edificio corporativo · sala conferencias + breakout rooms · catering integrado',vibe:'Corporativo moderno. Sesiones ejecutivas con servicios incluidos.'}
+  };
+
+  // Create sidebar early (before initMap)
+  var sidebar = document.createElement('div');
+  sidebar.className = 'map-sidebar';
+  sidebar.id = 'map-sidebar';
+  sidebar.innerHTML = '<div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.3);text-transform:uppercase;padding:20px">Haz click en un pin para ver el detalle</div>';
+  var mapContainer = document.getElementById('map-container');
+  if(mapContainer) mapContainer.appendChild(sidebar);
+
+  function showVenue(vid){
+    var d = VENUE_DATA[vid];
+    if(!d) return;
+    sidebar.innerHTML = '<div style="padding:20px;position:relative">' +
+      '<button id="map-sidebar-close" style="position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:14px">✕</button>' +
+      '<div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:8px">Venue</div>' +
+      '<div style="font-size:18px;font-weight:700;color:white;margin-bottom:4px">' + d.name + '</div>' +
+      '<div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.4);margin-bottom:16px">' + d.addr + '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">' +
+        '<div style="background:rgba(255,255,255,.04);padding:10px;border-radius:3px"><div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:3px">Capacidad</div><div style="font-size:14px;font-weight:600;color:white">' + d.cap + '</div></div>' +
+        '<div style="background:rgba(255,255,255,.04);padding:10px;border-radius:3px"><div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:3px">Acceso auto</div><div style="font-size:14px;font-weight:600;color:#4CAF78">✓ Sí</div></div>' +
+      '</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:14px">' + d.feat + '</div>' +
+      '<div style="padding:12px;background:rgba(160,0,34,.06);border:1px solid rgba(160,0,34,.12);border-radius:4px">' +
+        '<div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke);text-transform:uppercase;margin-bottom:4px">Ambiente</div>' +
+        '<div style="font-size:12px;color:rgba(255,255,255,.6);font-style:italic;line-height:1.5">' + d.vibe + '</div>' +
+      '</div>' +
+      '<div data-modal="' + vid + '" style="margin-top:14px;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--smoke);cursor:pointer;padding:8px;border:1px solid rgba(160,0,34,.2);border-radius:3px">Ver galería completa →</div>' +
+    '</div>';
+    sidebar.classList.add('active');
+    var closeBtn = document.getElementById('map-sidebar-close');
+    if(closeBtn) closeBtn.addEventListener('click', function(){ sidebar.classList.remove('active'); });
+  }
 
   function initMap(){
     if(map) return true;
     if(typeof L === 'undefined'){
       mapInitAttempts++;
-      if(mapInitAttempts < 30){
-        setTimeout(initMap, 300);
-      }
+      if(mapInitAttempts < 30) setTimeout(initMap, 300);
       return false;
     }
     map = L.map('leaflet-map', {
-      center: [-33.443, -70.614], zoom: 14,
+      center: [-33.435, -70.610], zoom: 13,
       zoomControl: true, attributionControl: false
     });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: ''
+      maxZoom: 19, attribution: ''
     }).addTo(map);
 
-    function makeIcon(label, color){
+    function makeIcon(label, color, isActive){
       color = color || '#A00022';
+      var size = isActive ? 44 : 34;
+      var border = isActive ? '3px solid #FD2F33' : '2.5px solid #fff';
+      var shadow = isActive ? '0 0 16px rgba(253,47,51,.6)' : '0 2px 10px rgba(0,0,0,.5)';
       return L.divIcon({
         className: '',
-        html: '<div style="width:34px;height:34px;background:' + color + ';border:2.5px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:FavoritMono,monospace;font-weight:700;font-size:11px;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.5);cursor:pointer;transition:transform .2s">' + label + '</div>',
-        iconSize: [34,34], iconAnchor: [17,17]
+        html: '<div style="width:'+size+'px;height:'+size+'px;background:'+color+';border:'+border+';border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:FavoritMono,monospace;font-weight:700;font-size:'+(isActive?14:11)+'px;color:#fff;box-shadow:'+shadow+';cursor:pointer;transition:all .3s">'+label+'</div>',
+        iconSize: [size,size], iconAnchor: [size/2,size/2]
       });
     }
     function makeMetroIcon(name){
       return L.divIcon({
         className: '',
-        html: '<div style="background:#0055AA;border:2px solid #fff;border-radius:4px;padding:3px 6px;font-family:FavoritMono,monospace;font-size:8px;font-weight:700;color:#fff;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.4)">M ' + name + '</div>',
+        html: '<div style="background:#0055AA;border:2px solid #fff;border-radius:4px;padding:3px 6px;font-family:FavoritMono,monospace;font-size:8px;font-weight:700;color:#fff;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.4)">M '+name+'</div>',
         iconSize: [null,22], iconAnchor: [0,11]
       });
     }
@@ -2035,12 +2611,26 @@ document.addEventListener('DOMContentLoaded', function(){
       {id:'m-v5',lat:-33.3967,lng:-70.5981,label:'5',name:'Galería P. Ready'},
       {id:'m-v6',lat:-33.4388,lng:-70.6038,label:'6',name:'Centro Lyon'}
     ];
+    var venueMarkers = {};
     venues.forEach(function(v){
       var m = L.marker([v.lat, v.lng], {icon: makeIcon(v.label)}).addTo(map);
+      venueMarkers[v.id] = {marker: m, data: v};
       m.bindTooltip('<span style="font-family:FavoritMono,monospace;font-size:10px;font-weight:700">' + v.name + '</span>', {permanent:false, direction:'top'});
       m.on('click', function(){
-        var modal = document.getElementById(v.id);
-        if(modal){ modal.classList.add('open'); lockScroll(); }
+        // Reset previous active marker
+        if(activeMarker && venueMarkers[activeMarker]){
+          var prev = venueMarkers[activeMarker];
+          prev.marker.setIcon(makeIcon(prev.data.label));
+        }
+        // Activate this marker
+        activeMarker = v.id;
+        m.setIcon(makeIcon(v.label, '#A00022', true));
+        // Fly to venue
+        map.flyTo([v.lat, v.lng], 16, {duration: 0.8});
+        // Show sidebar
+        showVenue(v.id);
+        // Resize after fly
+        setTimeout(function(){ map.invalidateSize(); }, 900);
       });
     });
 
@@ -2066,7 +2656,6 @@ document.addEventListener('DOMContentLoaded', function(){
     return true;
   }
 
-  // IntersectionObserver: init + invalidateSize when section visible
   var mapSection = document.getElementById('map-section') || mapEl.closest('section');
   if(mapSection){
     new IntersectionObserver(function(entries){

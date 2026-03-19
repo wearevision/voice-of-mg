@@ -3,7 +3,8 @@
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-logo">WAV<span>·</span>BTL</div>
-  <div class="nav-links">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menú"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="nav-links">
     <a href="#hero" class="nav-link active">Inicio</a>
     <a href="#contexto" class="nav-link">Contexto</a>
     <a href="#campo" class="nav-link">Campo</a>
@@ -421,35 +422,34 @@
       <div class="td-step" style="border-bottom-color:var(--red)"><div class="td-day" style="color:var(--red)">×4</div><div class="td-label" style="color:var(--red)">Ciclos / año</div></div>
     </div>
     <div class="deliver-grid anim anim-d3">
-      <div class="deliver-card" onclick="openModal('m-video')">
+      <div class="deliver-card">
         <div class="deliver-icon">🎬</div>
         <div class="deliver-title">4 Videos · 1 día por sesión</div>
         <ul class="deliver-list">
-          <li>1 día grabado por sesión (elección previa)</li>
-          <li>Edición highlight 5–8 min</li>
-          <li>Subtítulos en inglés</li>
-          <li>Formato MP4 HD</li>
+          <li>1 día grabado por sesión (elección previa MG)</li>
+          <li>Edición highlight 5–8 min con momentos clave</li>
+          <li>Subtítulos en inglés para casa matriz</li>
+          <li>Formato MP4 HD · Entrega D+5</li>
         </ul>
       </div>
-      <div class="deliver-card" onclick="openModal('m-reporte')">
+      <div class="deliver-card">
         <div class="deliver-icon">📄</div>
         <div class="deliver-title">4 Informes PDF bilingüe</div>
         <ul class="deliver-list">
-          <li>Resumen ejecutivo (1 pág)</li>
-          <li>Insights por tema</li>
-          <li>Verbatims seleccionados</li>
-          <li>Recomendaciones accionables</li>
-          <li>Español + Inglés</li>
+          <li>Resumen ejecutivo 1 pág para directivos</li>
+          <li>Insights por tema + verbatims con atribución</li>
+          <li>Recomendaciones con responsable MG sugerido</li>
+          <li>Español + Inglés · Entrega D+10</li>
         </ul>
       </div>
-      <div class="deliver-card" onclick="openModal('m-convoc-report')">
+      <div class="deliver-card">
         <div class="deliver-icon">📊</div>
         <div class="deliver-title">Informe de convocatoria</div>
         <ul class="deliver-list">
-          <li>KPIs: invitados / confirmados</li>
-          <li>Tasa de asistencia real</li>
-          <li>Perfil de asistentes</li>
-          <li>No-shows documentados</li>
+          <li>KPIs: invitados / confirmados / asistentes</li>
+          <li>Tasa de asistencia real vs objetivo</li>
+          <li>Perfil de asistentes (segmento, modelo, zona)</li>
+          <li>No-shows documentados con motivo</li>
         </ul>
       </div>
     </div>
@@ -520,49 +520,208 @@
   <div class="stag" style="opacity:.3"><div class="stag-word" style="color:var(--red)">PAIN</div><div class="stag-bar" style="background:var(--red)"></div></div>
 </section>
 
-<!-- ═══ SLIDE 12 — WAV INTELLIGENCE ══════════════ -->
+<!-- ═══ SLIDE 12 — WAV INTELLIGENCE · NARRATIVA ══════════════ -->
+
+<!-- ── CAPÍTULO 1: APERTURA ── -->
 <section id="intelligence" style="background:var(--burg)">
-  <div class="inner">
+  <div class="inner-narrow">
     <div class="label anim" style="color:var(--smoke)">WAV Intelligence</div>
     <div class="section-title section-title-w anim anim-d1">
       Del focus group al sistema de<br><span class="hw hw-w" style="font-size:1.4em">inteligencia</span><span style="font-weight:300;color:rgba(255,255,255,.6)"> viva.</span>
     </div>
-    <p class="lead anim anim-d2" style="color:rgba(255,255,255,.45)">Arquitectura de captura, procesamiento e inteligencia. Haz click en cada módulo para ver el detalle.</p>
-    <div class="arch anim anim-d3">
-      <div class="arch-row">
-        <div class="arch-lbl">Captura</div>
-        <div class="arch-items">
-          <div class="arch-item" onclick="openModal('m-lav')"><div class="arch-name">🎙 20× Lavalier individual</div><div class="arch-desc">Grabación 32-bit float por participante · microSD independiente · 14 voces + 6 respaldo</div></div>
-          <div class="arch-item" onclick="openModal('m-360')"><div class="arch-name">📷 Cámara 360°</div><div class="arch-desc">Eje de sincronización · video + audio por timestamp</div></div>
-        </div>
+    <div class="anim anim-d2" style="max-width:620px;margin-top:24px">
+      <p style="font-size:15px;line-height:1.8;color:rgba(255,255,255,.55)">Un focus group tradicional produce un video y un PDF. <strong style="color:white">240 personas al año te dicen exactamente qué piensan</strong> — y tú recibes un resumen de 20 páginas que nadie vuelve a abrir en marzo.</p>
+      <p style="font-size:15px;line-height:1.8;color:rgba(255,255,255,.55);margin-top:14px">Lo que proponemos no es un mejor informe. Es un <strong style="color:white">cambio de arquitectura</strong>: cada voz grabada individualmente, cada opinión atribuida por nombre, cada dato buscable y cruzable entre sesiones. Un sistema que acumula inteligencia en vez de archivarla.</p>
+    </div>
+    <div class="narr-transition anim anim-d3">Todo empieza con una decisión de arquitectura.</div>
+  </div>
+</section>
+
+<!-- ── CAPÍTULO 2: CAPTURA ── -->
+<section style="background:var(--burg);padding-top:0">
+  <div class="inner-narrow">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:20px" class="anim">Captura · Capa 1</div>
+
+    <!-- Lavalier -->
+    <div class="narr-block anim">
+      <div style="font-size:17px;font-weight:600;color:white;margin-bottom:8px">🎙 20× Lavalier individual · grabación 32-bit float</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">Cada participante lleva su propio micrófono con grabación totalmente independiente en tarjeta microSD. El audio de cada persona se graba por separado, sin interferencia ni dependencia de red.</p>
+      <div class="narr-spec-grid" style="margin-top:14px">
+        <div class="narr-spec"><strong>32-bit float</strong>Rango dinámico masivo — sin clipping posible</div>
+        <div class="narr-spec"><strong>microSD independiente</strong>Sin falla de red · cada pista autónoma</div>
+        <div class="narr-spec"><strong>14 activos + 6 respaldo</strong>Redundancia total en campo</div>
+        <div class="narr-spec"><strong>Post-producción perfecta</strong>Cada voz aislada = mezcla precisa</div>
       </div>
-      <div class="arch-arr">↓</div>
-      <div class="arch-row">
-        <div class="arch-lbl">Proceso</div>
-        <div class="arch-items">
-          <div class="arch-item" onclick="openModal('m-diar')"><div class="arch-name">🔤 Transcripción + diarización</div><div class="arch-desc">Quién dijo qué · timestamp exacto · atribución por nombre</div></div>
-          <div class="arch-item" onclick="openModal('m-perfil')"><div class="arch-name">🏷 Perfilamiento</div><div class="arch-desc">Modelo MG · edad · historial · segmento</div></div>
-          <div class="arch-item" onclick="openModal('m-sync')"><div class="arch-name">🔗 Sincronización A/V</div><div class="arch-desc">Audio individual anclado al video 360° por timestamp</div></div>
-        </div>
+      <div class="narr-callout">Cuando 4 personas hablan a la vez en un focus group tradicional, el audio se pierde. Aquí, <strong>cada voz existe en su propia pista</strong>. Nada se pierde. Nunca.</div>
+    </div>
+
+    <!-- 360° -->
+    <div class="narr-block anim anim-d1">
+      <div style="font-size:17px;font-weight:600;color:white;margin-bottom:8px">📷 Cámara 360° — el eje de sincronización</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">La cámara 360° no es una herramienta de análisis — es la <strong style="color:rgba(255,255,255,.8)">infraestructura de navegación</strong> del sistema completo. Un solo archivo de video captura a todos los participantes simultáneamente, y permite que las 20 pistas de audio se anclen a una referencia visual única.</p>
+      <div class="narr-callout">Buscas "precio" en el dashboard → el sistema encuentra la pista de audio → <strong>el video 360° ya está sincronizado</strong> → ves quién lo dijo y cómo reaccionó toda la mesa.</div>
+    </div>
+
+    <div class="narr-transition anim anim-d2">20 pistas de audio. 1 video omnidireccional.<br>Ahora hay que convertirlo en conocimiento.</div>
+  </div>
+</section>
+
+<!-- ── CAPÍTULO 3: PROCESO ── -->
+<section style="background:var(--dgray)">
+  <div class="inner-narrow">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:8px" class="anim">Proceso · Capa 2</div>
+    <div style="font-size:clamp(22px,3vw,32px);font-weight:700;color:white;margin-bottom:8px" class="anim anim-d1">3 capas de inteligencia</div>
+    <p style="font-size:14px;color:rgba(255,255,255,.4);margin-bottom:36px" class="anim anim-d1">Donde otros entregan un archivo, nosotros construimos un sistema.</p>
+
+    <!-- Paso 01 -->
+    <div class="narr-step anim">
+      <div class="narr-step-num">01</div>
+      <div class="narr-step-body">
+        <div class="narr-step-title">Transcripción + diarización con nombres</div>
+        <div class="narr-step-text">Con 20 pistas de audio individuales, la diarización es perfecta: <strong>cada voz ya está separada antes del proceso</strong>. No hay confusión entre voces solapadas. Transcripción automática con accuracy &gt;95% en español.<br><br>No hay "Speaker A". Hay <strong>"Felipe García, dueño de ZS EV, 38 años, minuto 23:14"</strong>. Cada fragmento de audio se atribuye automáticamente a su hablante con timestamp exacto.</div>
       </div>
-      <div class="arch-arr">↓</div>
-      <div class="arch-row">
-        <div class="arch-lbl">Output</div>
-        <div class="arch-items">
-          <div class="arch-item" onclick="openModal('m-dash')"><div class="arch-name">📊 Dashboard navegable</div><div class="arch-desc">Video 360° · timeline · búsqueda semántica · keypoints</div></div>
-          <div class="arch-item" onclick="openModal('m-search')"><div class="arch-name">🔍 Pregunta libre</div><div class="arch-desc">"¿qué dijo el segmento ZS sobre precio?" → clips exactos</div></div>
-          <div class="arch-item" onclick="openModal('m-trend')"><div class="arch-name">📈 Tendencias cross-sesión</div><div class="arch-desc">Comparación entre las 4 sesiones del año</div></div>
+    </div>
+
+    <!-- Paso 02 -->
+    <div class="narr-step anim anim-d1">
+      <div class="narr-step-num">02</div>
+      <div class="narr-step-body">
+        <div class="narr-step-title">Perfilamiento individual de asistentes</div>
+        <div class="narr-step-text">Cada participante tiene ficha enriquecida <strong>antes</strong> de entrar a la sala. Nombre completo, segmento demográfico, modelo MG que posee o cotizó, tiempo como cliente, etapa del proceso de compra.<br><br>El facilitador y el equipo MG saben con quién están hablando en tiempo real. La composición del grupo no es casualidad — <strong>es diseño estratégico</strong>: dueños de ZS junto al próximo modelo eléctrico en sala.</div>
+      </div>
+    </div>
+
+    <!-- Paso 03 -->
+    <div class="narr-step anim anim-d2">
+      <div class="narr-step-num">03</div>
+      <div class="narr-step-body">
+        <div class="narr-step-title">Sincronización Audio / Video / Texto</div>
+        <div class="narr-step-text">Cada pista de audio individual queda anclada al video 360° por timestamp. El resultado: en el dashboard, cada momento tiene <strong>3 capas sincronizadas</strong>:</div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:14px">🎙</span><span style="font-size:12px;color:rgba(255,255,255,.55)">La pista de audio del hablante exacto</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:14px">📷</span><span style="font-size:12px;color:rgba(255,255,255,.55)">El frame del video 360° en ese segundo</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:14px">📝</span><span style="font-size:12px;color:rgba(255,255,255,.55)">El texto transcrito con nombre del hablante</span></div>
         </div>
       </div>
     </div>
-    <div style="margin-top:36px">
-      <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:14px" class="anim">Los 5 superpoderes — click para expandir</div>
-      <div class="power-grid anim anim-d1">
-        <div class="power-card" onclick="openModal('m-p1')"><div class="power-num">01</div><div class="power-icon">⚡</div><div class="power-title">Atribución exacta</div><div class="power-body">Cada insight tiene nombre, apellido, modelo de auto y perfil.</div><div class="power-quote">"Busca: dueños de ZS sobre postventa. Obtén los clips exactos."</div><div class="power-click">Expandir →</div></div>
-        <div class="power-card" onclick="openModal('m-p2')"><div class="power-num">02</div><div class="power-icon">🧠</div><div class="power-title">Memoria de marca</div><div class="power-body">Compara lo que dijo un cliente en marzo con lo que dice en septiembre.</div><div class="power-quote">"¿Cambió la percepción tras el lanzamiento? Dato exacto."</div><div class="power-click">Expandir →</div></div>
-        <div class="power-card" onclick="openModal('m-p3')"><div class="power-num">03</div><div class="power-icon">🎬</div><div class="power-title">Video 360° navegable</div><div class="power-body">Timeline, keypoints de sesión y campo de pregunta libre. Navega 6 hrs en 10 min.</div><div class="power-quote">"Busca 'precio' → salta al min 23:14 → ves a Felipe García y la reacción de toda la mesa."</div><div class="power-click">Expandir →</div></div>
-        <div class="power-card" onclick="openModal('m-p4')"><div class="power-num">04</div><div class="power-icon">📈</div><div class="power-title">Panel evolutivo 240→360 perfiles</div><div class="power-body">Un activo de inteligencia que crece con cada sesión.</div><div class="power-quote">"No envejece. No se descarta. Punto de partida para 2027."</div><div class="power-click">Expandir →</div></div>
-        <div class="power-card power-card-wide" onclick="openModal('m-p5')"><div class="power-num">05</div><div class="power-icon">🚗</div><div class="power-title">El auto en la sala</div><div class="power-body">El modelo sobre el que MG necesita feedback entra al venue. Los participantes hablan del próximo lanzamiento mirando el próximo lanzamiento. Cada perfil está diseñado estratégicamente.</div><div class="power-quote">"Contexto real = respuestas más honestas = decisiones más precisas."</div><div class="power-click">Expandir →</div></div>
+
+    <div class="narr-transition anim anim-d3">Audio atribuido. Video sincronizado. Perfiles enriquecidos.<br>¿Qué haces con todo eso?</div>
+  </div>
+</section>
+
+<!-- ── CAPÍTULO 4: OUTPUT ── -->
+<section style="background:var(--burg)">
+  <div class="inner-narrow">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:8px" class="anim">Output · Capa 3</div>
+    <div style="font-size:clamp(22px,3vw,32px);font-weight:700;color:white;margin-bottom:8px" class="anim anim-d1">Un dashboard. No un PDF.</div>
+    <p style="font-size:14px;color:rgba(255,255,255,.4);margin-bottom:32px" class="anim anim-d1">La diferencia entre archivar y decidir.</p>
+
+    <!-- Dashboard -->
+    <div class="narr-block anim anim-d2">
+      <div style="font-size:15px;font-weight:600;color:white;margin-bottom:8px">📊 Dashboard navegable privado</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">Un panel web privado para el equipo MG. Video 360° con timeline clickable, keypoints automáticos, búsqueda semántica por tema o participante, y campo de pregunta libre. Acumula datos sesión a sesión — al cierre del año tienes un activo de inteligencia, no 4 reportes sueltos.</p>
+    </div>
+
+    <!-- Pregunta libre -->
+    <div class="narr-block anim anim-d3">
+      <div style="font-size:15px;font-weight:600;color:white;margin-bottom:12px">🔍 Campo de pregunta libre</div>
+      <p style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:14px">Pregunta cualquier cosa sobre la sesión. Obtén clips exactos con perfil del hablante.</p>
+      <div class="narr-query">
+        <div class="narr-query-q">"¿Qué dijeron los dueños de ZS sobre el servicio post-venta?"</div>
+        <div class="narr-query-a">→ 4 clips · Sergio Martinez (ZS Trophy, 42 años, 0:45:30), Daisy Córdova (ZS EV, 38 años, 1:20:30)…</div>
+      </div>
+      <div class="narr-query">
+        <div class="narr-query-q">"¿Cuándo fue el momento de mayor entusiasmo en la sesión?"</div>
+        <div class="narr-query-a">→ Min 0:14:51 · César Ulloa habla del techo panorámico · video 360° sincronizado</div>
+      </div>
+      <div class="narr-query">
+        <div class="narr-query-q">"¿Qué temas aparecieron espontáneamente sin ser preguntados?"</div>
+        <div class="narr-query-a">→ Depreciación + bonos opacos — 5 de 8 participantes, no fue preguntado directamente</div>
+      </div>
+    </div>
+
+    <!-- Tendencias -->
+    <div class="narr-block anim anim-d4">
+      <div style="font-size:15px;font-weight:600;color:white;margin-bottom:8px">📈 Tendencias cross-sesión</div>
+      <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">La verdadera inteligencia no está en una sesión — está en <strong style="color:rgba(255,255,255,.8)">cómo evolucionan las percepciones entre sesiones</strong>.</p>
+      <div style="margin-top:12px;font-size:12px;color:rgba(255,255,255,.45);line-height:2">
+        ¿Cambió la percepción de precio tras el lanzamiento del nuevo modelo?<br>
+        ¿Los clientes de marzo hablan diferente sobre postventa que los de septiembre?<br>
+        ¿Qué temas emergieron este año que no existían antes?
+      </div>
+      <div class="narr-callout" style="margin-top:14px">Al cierre de diciembre: <strong>informe anual consolidado</strong> con tendencias comparativas entre las 4 sesiones. Base de planificación para 2027.</div>
+    </div>
+  </div>
+  <div style="padding:20px 0 0;text-align:center">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.15);text-transform:uppercase" class="anim">↓ Vista previa del dashboard real a continuación</div>
+  </div>
+</section>
+
+<!-- ── (dashboard_mockup.html se inyecta aquí por build.py) ── -->
+
+<!-- ── CAPÍTULO 5: SUPERPODERES ── -->
+<section style="background:var(--dgray)">
+  <div class="inner-narrow">
+    <div style="font-family:var(--mono);font-size:8px;letter-spacing:3px;color:rgba(253,47,51,.5);text-transform:uppercase;margin-bottom:8px" class="anim">Capacidades</div>
+    <div style="font-size:clamp(22px,3vw,32px);font-weight:700;color:white;margin-bottom:8px" class="anim anim-d1">5 cosas que un PDF nunca va a poder hacer.</div>
+    <p style="font-size:14px;color:rgba(255,255,255,.4);margin-bottom:36px" class="anim anim-d1">Lo que separa un informe que se archiva de un sistema que se consulta.</p>
+
+    <!-- Poder 01 -->
+    <div class="narr-power anim">
+      <div class="narr-power-num">01</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">⚡ Atribución exacta</div>
+        <div class="narr-power-body">Cada insight tiene nombre, apellido, modelo de auto y perfil completo. No más "alguien dijo que el infotainment es difícil." Con WAV Intelligence: <strong style="color:rgba(255,255,255,.8)">"Felipe García, dueño de ZS EV, 38 años, 23:14 — 'el infotainment se congela cuando enciendo el aire'."</strong> Ese dato es accionable. El PDF no lo puede dar.</div>
+        <div class="narr-power-quote">"Busca: dueños de ZS sobre postventa. Obtén los clips exactos."</div>
+      </div>
+    </div>
+
+    <!-- Poder 02 -->
+    <div class="narr-power anim anim-d1">
+      <div class="narr-power-num">02</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">🧠 Memoria de marca</div>
+        <div class="narr-power-body">Compara lo que dijo un cliente en marzo con lo que dice en septiembre. ¿Cambió su percepción después del lanzamiento? Los 4 focus groups no son 4 eventos separados — son <strong style="color:rgba(255,255,255,.8)">4 puntos en una línea de tiempo de evolución de percepciones</strong>. El dashboard muestra esa línea en tiempo real.</div>
+        <div class="narr-power-quote">"¿Cambió la percepción tras el lanzamiento? Dato exacto, no anécdota."</div>
+      </div>
+    </div>
+
+    <!-- Poder 03 -->
+    <div class="narr-power anim anim-d2">
+      <div class="narr-power-num">03</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">🎬 Video 360° navegable</div>
+        <div class="narr-power-body">No hay que ver las 6 horas. Escribes "garantía" en el buscador → el sistema identifica todos los momentos → te muestra clips con speaker, timestamp y contexto → click y el video 360° abre exactamente en ese segundo. <strong style="color:rgba(255,255,255,.8)">Navega 6 horas de contenido en 10 minutos.</strong></div>
+        <div class="narr-power-quote">"Busca 'precio' → salta al min 23:14 → ves a Felipe García y la reacción de toda la mesa."</div>
+      </div>
+    </div>
+
+    <!-- Poder 04 -->
+    <div class="narr-power anim anim-d3">
+      <div class="narr-power-num">04</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">📈 Panel evolutivo · 240→360 perfiles</div>
+        <div class="narr-power-body">Al final del año tienes 240–360 perfiles de cliente construidos sesión a sesión. Cada perfil incluye: datos del vehículo, verbatims atribuidos, evolución de percepciones, y segmento para análisis cruzado. <strong style="color:rgba(255,255,255,.8)">Un activo de inteligencia que no existe en ningún otro lugar.</strong></div>
+        <div class="narr-power-quote">"No envejece. No se descarta. Es el punto de partida para 2027."</div>
+      </div>
+    </div>
+
+    <!-- Poder 05 — HERO -->
+    <div class="narr-power narr-power-hero anim anim-d4">
+      <div class="narr-power-num">05</div>
+      <div class="narr-power-content">
+        <div class="narr-power-title">🚗 El auto en la sala</div>
+        <div class="narr-power-body">El modelo sobre el que MG necesita feedback <strong style="color:rgba(255,255,255,.8)">entra al venue</strong>. Los participantes hablan del próximo lanzamiento mirándolo. La selección de participantes se cruza con el modelo presente: dueños de ZS hablan del ZS, cotizantes del próximo EV lo ven en persona. Cada perfil está diseñado estratégicamente para generar el feedback que MG necesita.</div>
+        <div class="narr-power-quote">"Contexto real = respuestas más honestas = decisiones más precisas."</div>
+      </div>
+    </div>
+
+    <!-- Cierre argumentativo -->
+    <div style="margin-top:40px;max-width:560px" class="anim">
+      <p style="font-size:15px;line-height:1.8;color:rgba(255,255,255,.55)">El estándar de la industria es un PDF y un video. Eso era aceptable cuando la investigación cualitativa era una foto fija.</p>
+      <p style="font-size:15px;line-height:1.8;color:rgba(255,255,255,.55);margin-top:14px">Pero cuando tienes <strong style="color:white">240 a 360 voces perfiladas al año</strong>, atribuibles por nombre, buscables por tema, comparables en el tiempo — ya no estás haciendo focus groups. Estás construyendo un <strong style="color:white">sistema de inteligencia viva</strong>.</p>
+      <div style="margin-top:24px;padding:20px 24px;border-left:3px solid var(--red);background:rgba(253,47,51,.04)">
+        <p style="font-size:16px;font-weight:600;color:white;line-height:1.6">La diferencia entre datos que se archivan y datos que se consultan.<br><span style="color:var(--smoke)">Entre un reporte que expira y una base de conocimiento que se capitaliza.</span></p>
       </div>
     </div>
   </div>

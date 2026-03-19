@@ -224,44 +224,104 @@ document.addEventListener('keydown', function(e){
   }
 });
 
-// ── LEAFLET MAP — retry init + IntersectionObserver + invalidateSize ──
+// ── MOBILE NAV HAMBURGER ──
+(function(){
+  var toggle = document.getElementById('nav-toggle');
+  var links = document.getElementById('nav-links');
+  if(!toggle || !links) return;
+  toggle.addEventListener('click', function(){
+    toggle.classList.toggle('open');
+    links.classList.toggle('open');
+  });
+  links.addEventListener('click', function(e){
+    if(e.target.tagName === 'A'){
+      toggle.classList.remove('open');
+      links.classList.remove('open');
+    }
+  });
+})();
+
+// ── LEAFLET MAP — flyTo + sidebar + IntersectionObserver ──
 document.addEventListener('DOMContentLoaded', function(){
   var mapEl = document.getElementById('leaflet-map');
   if(!mapEl) return;
 
   var map = null;
   var mapInitAttempts = 0;
+  var activeMarker = null;
+
+  // Venue data with details for sidebar
+  var VENUE_DATA = {
+    'm-v1': {name:'Galpón Italia',addr:'Italia 1242, Ñuñoa',cap:'80 pax',feat:'Espacio industrial reconvertido · techos altos · acceso vehicular directo · estacionamiento privado 20 autos',vibe:'Industrial premium. Ideal para mostrar autos en contexto urbano.'},
+    'm-v2': {name:'Club Providencia',addr:'Av. Providencia 2124',cap:'120 pax',feat:'Salón principal + terraza · equipamiento AV incluido · cocina industrial · valet disponible',vibe:'Clásico elegante. Ubicación céntrica, fácil acceso metro.'},
+    'm-v3': {name:'Castillo Ñuñoa',addr:'Jorge Washington 201',cap:'60 pax',feat:'Casa patrimonial · jardín interior · iluminación ambiental · acceso vehicular lateral',vibe:'Íntimo y exclusivo. Grupos pequeños de alto perfil.'},
+    'm-v4': {name:'Providencia Casa',addr:'Guardia Vieja 255',cap:'50 pax',feat:'Casa remodelada · 3 salones conectables · patio trasero cubierto · cocina equipada',vibe:'Residencial cálido. Focus groups que requieren confianza.'},
+    'm-v5': {name:'Galería Patricia Ready',addr:'Espoz 3125, Vitacura',cap:'100 pax',feat:'Galería de arte · espacios blancos amplios · acceso vehicular + rampa · iluminación profesional',vibe:'Vanguardia. El auto como pieza central de una galería.'},
+    'm-v6': {name:'Centro Lyon',addr:'Av. Lyon 0123',cap:'90 pax',feat:'Edificio corporativo · sala conferencias + breakout rooms · catering integrado',vibe:'Corporativo moderno. Sesiones ejecutivas con servicios incluidos.'}
+  };
+
+  // Create sidebar early (before initMap)
+  var sidebar = document.createElement('div');
+  sidebar.className = 'map-sidebar';
+  sidebar.id = 'map-sidebar';
+  sidebar.innerHTML = '<div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.3);text-transform:uppercase;padding:20px">Haz click en un pin para ver el detalle</div>';
+  var mapContainer = document.getElementById('map-container');
+  if(mapContainer) mapContainer.appendChild(sidebar);
+
+  function showVenue(vid){
+    var d = VENUE_DATA[vid];
+    if(!d) return;
+    sidebar.innerHTML = '<div style="padding:20px;position:relative">' +
+      '<button id="map-sidebar-close" style="position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:14px">✕</button>' +
+      '<div style="font-family:var(--mono);font-size:7px;letter-spacing:2px;color:var(--smoke);text-transform:uppercase;margin-bottom:8px">Venue</div>' +
+      '<div style="font-size:18px;font-weight:700;color:white;margin-bottom:4px">' + d.name + '</div>' +
+      '<div style="font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.4);margin-bottom:16px">' + d.addr + '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">' +
+        '<div style="background:rgba(255,255,255,.04);padding:10px;border-radius:3px"><div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:3px">Capacidad</div><div style="font-size:14px;font-weight:600;color:white">' + d.cap + '</div></div>' +
+        '<div style="background:rgba(255,255,255,.04);padding:10px;border-radius:3px"><div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:3px">Acceso auto</div><div style="font-size:14px;font-weight:600;color:#4CAF78">✓ Sí</div></div>' +
+      '</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:14px">' + d.feat + '</div>' +
+      '<div style="padding:12px;background:rgba(160,0,34,.06);border:1px solid rgba(160,0,34,.12);border-radius:4px">' +
+        '<div style="font-family:var(--mono);font-size:7px;letter-spacing:1px;color:var(--smoke);text-transform:uppercase;margin-bottom:4px">Ambiente</div>' +
+        '<div style="font-size:12px;color:rgba(255,255,255,.6);font-style:italic;line-height:1.5">' + d.vibe + '</div>' +
+      '</div>' +
+      '<div data-modal="' + vid + '" style="margin-top:14px;text-align:center;font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--smoke);cursor:pointer;padding:8px;border:1px solid rgba(160,0,34,.2);border-radius:3px">Ver galería completa →</div>' +
+    '</div>';
+    sidebar.classList.add('active');
+    var closeBtn = document.getElementById('map-sidebar-close');
+    if(closeBtn) closeBtn.addEventListener('click', function(){ sidebar.classList.remove('active'); });
+  }
 
   function initMap(){
     if(map) return true;
     if(typeof L === 'undefined'){
       mapInitAttempts++;
-      if(mapInitAttempts < 30){
-        setTimeout(initMap, 300);
-      }
+      if(mapInitAttempts < 30) setTimeout(initMap, 300);
       return false;
     }
     map = L.map('leaflet-map', {
-      center: [-33.443, -70.614], zoom: 14,
+      center: [-33.435, -70.610], zoom: 13,
       zoomControl: true, attributionControl: false
     });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: ''
+      maxZoom: 19, attribution: ''
     }).addTo(map);
 
-    function makeIcon(label, color){
+    function makeIcon(label, color, isActive){
       color = color || '#A00022';
+      var size = isActive ? 44 : 34;
+      var border = isActive ? '3px solid #FD2F33' : '2.5px solid #fff';
+      var shadow = isActive ? '0 0 16px rgba(253,47,51,.6)' : '0 2px 10px rgba(0,0,0,.5)';
       return L.divIcon({
         className: '',
-        html: '<div style="width:34px;height:34px;background:' + color + ';border:2.5px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:FavoritMono,monospace;font-weight:700;font-size:11px;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.5);cursor:pointer;transition:transform .2s">' + label + '</div>',
-        iconSize: [34,34], iconAnchor: [17,17]
+        html: '<div style="width:'+size+'px;height:'+size+'px;background:'+color+';border:'+border+';border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:FavoritMono,monospace;font-weight:700;font-size:'+(isActive?14:11)+'px;color:#fff;box-shadow:'+shadow+';cursor:pointer;transition:all .3s">'+label+'</div>',
+        iconSize: [size,size], iconAnchor: [size/2,size/2]
       });
     }
     function makeMetroIcon(name){
       return L.divIcon({
         className: '',
-        html: '<div style="background:#0055AA;border:2px solid #fff;border-radius:4px;padding:3px 6px;font-family:FavoritMono,monospace;font-size:8px;font-weight:700;color:#fff;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.4)">M ' + name + '</div>',
+        html: '<div style="background:#0055AA;border:2px solid #fff;border-radius:4px;padding:3px 6px;font-family:FavoritMono,monospace;font-size:8px;font-weight:700;color:#fff;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,.4)">M '+name+'</div>',
         iconSize: [null,22], iconAnchor: [0,11]
       });
     }
@@ -281,12 +341,26 @@ document.addEventListener('DOMContentLoaded', function(){
       {id:'m-v5',lat:-33.3967,lng:-70.5981,label:'5',name:'Galería P. Ready'},
       {id:'m-v6',lat:-33.4388,lng:-70.6038,label:'6',name:'Centro Lyon'}
     ];
+    var venueMarkers = {};
     venues.forEach(function(v){
       var m = L.marker([v.lat, v.lng], {icon: makeIcon(v.label)}).addTo(map);
+      venueMarkers[v.id] = {marker: m, data: v};
       m.bindTooltip('<span style="font-family:FavoritMono,monospace;font-size:10px;font-weight:700">' + v.name + '</span>', {permanent:false, direction:'top'});
       m.on('click', function(){
-        var modal = document.getElementById(v.id);
-        if(modal){ modal.classList.add('open'); lockScroll(); }
+        // Reset previous active marker
+        if(activeMarker && venueMarkers[activeMarker]){
+          var prev = venueMarkers[activeMarker];
+          prev.marker.setIcon(makeIcon(prev.data.label));
+        }
+        // Activate this marker
+        activeMarker = v.id;
+        m.setIcon(makeIcon(v.label, '#A00022', true));
+        // Fly to venue
+        map.flyTo([v.lat, v.lng], 16, {duration: 0.8});
+        // Show sidebar
+        showVenue(v.id);
+        // Resize after fly
+        setTimeout(function(){ map.invalidateSize(); }, 900);
       });
     });
 
@@ -312,7 +386,6 @@ document.addEventListener('DOMContentLoaded', function(){
     return true;
   }
 
-  // IntersectionObserver: init + invalidateSize when section visible
   var mapSection = document.getElementById('map-section') || mapEl.closest('section');
   if(mapSection){
     new IntersectionObserver(function(entries){
