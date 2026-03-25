@@ -95,8 +95,8 @@ wav-intelligence/
 │       ├── auth.test.ts                   ← EXISTS
 │       ├── tenant-schema.test.ts          ← NEW
 │       ├── get-tenant.test.ts             ← NEW
-│       ├── use-label.test.ts              ← NEW
-│       └── use-feature.test.ts            ← NEW
+│       ├── use-label.test.tsx             ← NEW
+│       └── use-feature.test.tsx           ← NEW
 │
 └── public/
     └── tenants/
@@ -992,12 +992,12 @@ git commit -m "feat: tenant config system — schema, loader, locales, fallback"
 - Create: `src/hooks/use-tenant.ts`
 - Create: `src/hooks/use-feature.ts`
 - Create: `src/hooks/use-label.ts`
-- Create: `tests/unit/use-label.test.ts`
-- Create: `tests/unit/use-feature.test.ts`
+- Create: `tests/unit/use-label.test.tsx`
+- Create: `tests/unit/use-feature.test.tsx`
 
 - [ ] **Step 1: Write failing test for `useLabel`**
 
-Create `tests/unit/use-label.test.ts`:
+Create `tests/unit/use-label.test.tsx`:
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -1079,7 +1079,7 @@ describe('useLabel', () => {
 
 - [ ] **Step 2: Write failing test for `useFeature`**
 
-Create `tests/unit/use-feature.test.ts`:
+Create `tests/unit/use-feature.test.tsx`:
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -1089,7 +1089,7 @@ import { TenantProvider } from '@/providers/tenant-provider'
 import { useFeature } from '@/hooks/use-feature'
 import { type TenantConfig } from '@/config/tenant-schema'
 
-// Reuse the same mockConfig from use-label.test.ts inline
+// Reuse the same mockConfig from use-label.test.tsx inline
 const mockConfig: TenantConfig = {
   id: 'test',
   name: 'Test Tenant',
@@ -1155,7 +1155,7 @@ describe('useFeature', () => {
 - [ ] **Step 3: Run tests — expect FAIL**
 
 ```bash
-cd ~/projects/wav-intelligence && npx vitest run tests/unit/use-label.test.ts tests/unit/use-feature.test.ts
+cd ~/projects/wav-intelligence && npx vitest run tests/unit/use-label.test.tsx tests/unit/use-feature.test.tsx
 ```
 
 Expected: FAIL — modules not found.
@@ -1238,7 +1238,7 @@ export function useLabel(key: string): string {
 - [ ] **Step 5: Run tests — expect PASS**
 
 ```bash
-cd ~/projects/wav-intelligence && npx vitest run tests/unit/use-label.test.ts tests/unit/use-feature.test.ts
+cd ~/projects/wav-intelligence && npx vitest run tests/unit/use-label.test.tsx tests/unit/use-feature.test.tsx
 ```
 
 Expected: All 5 tests PASS.
@@ -1246,7 +1246,7 @@ Expected: All 5 tests PASS.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/providers/ src/hooks/ tests/unit/use-label.test.ts tests/unit/use-feature.test.ts
+git add src/providers/ src/hooks/ tests/unit/use-label.test.tsx tests/unit/use-feature.test.tsx
 git commit -m "feat: TenantProvider + useLabel, useFeature, useTenant hooks"
 ```
 
