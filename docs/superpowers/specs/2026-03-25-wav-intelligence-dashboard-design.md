@@ -116,7 +116,7 @@ Verbatim
 Keypoint
   └── id, session_id (FK), topic
   └── title, description, timestamp
-  └── supporting_verbatim_ids (array)
+  └── (linked via keypoint_verbatims / action_plan_verbatims join tables)
 
 ActionPlan
   └── id, session_id (FK, nullable for cross-session)
@@ -124,19 +124,21 @@ ActionPlan
   └── title, description, ai_reasoning
   └── impact_score (1-10), cost_estimate (low|medium|high)
   └── cognitive_load (low|medium|high), time_estimate
-  └── supporting_verbatim_ids (array)
+  └── (linked via keypoint_verbatims / action_plan_verbatims join tables)
   └── status (pending|in_progress|done), assigned_to
 
 ProcessingJob
   └── id, session_id (FK), status (queued|running|completed|failed)
   └── current_step, total_steps, progress (0-100)
   └── error_message, trigger_run_id
+  └── failed_step (nullable), last_completed_step (default 0)
   └── created_at, completed_at
 
 User (Supabase Auth)
   └── id, email, name, role (wav_admin|mg_client|moderator)
   └── organization (WAV|MG)
-  └── assigned_session_ids (moderators only)
+UserSession (join table for moderator assignments)
+  └── user_id (FK → User), session_id (FK → Session)
 ```
 
 ### RLS policies
@@ -406,7 +408,281 @@ React-pdf renders styled templates with MG branding. Stored in Supabase Storage.
 
 ---
 
-## 10. Build Phases
+## 10. API Endpoints
+
+### Auth
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/auth/callback` | — | Supabase Auth callback handler |
+
+### Sessions
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/api/sessions` | all roles | List sessions (filtered by RLS) |
+| GET | `/api/sessions/[id]` | all roles | Session detail with stats |
+| POST | `/api/sessions` | wav_admin | Create new session |
+| PATCH | `/api/sessions/[id]` | wav_admin | Update session metadata |
+| DELETE | `/api/sessions/[id]` | wav_admin | Delete session + cascade |
+
+### Upload & Media
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/sessions/[id]/upload-url` | wav_admin | Get R2 presigned multipart upload URLs |
+| POST | `/api/sessions/[id]/upload-complete` | wav_admin | Confirm upload, create MediaFile records |
+| GET | `/api/sessions/[id]/media/[fileId]/stream` | all roles | Generate signed HLS manifest URL |
+| GET | `/api/sessions/[id]/media/[fileId]/peaks` | all roles | Serve waveform peak data |
+
+### Session Setup
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/sessions/[id]/participants` | wav_admin | Bulk upsert participants (mic assignment) |
+| PUT | `/api/sessions/[id]/seating` | wav_admin | Save seat positions from 360 frame |
+| POST | `/api/sessions/[id]/process` | wav_admin | Trigger processing pipeline |
+
+### Processing
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/api/sessions/[id]/processing` | wav_admin | Get ProcessingJob status + progress |
+| POST | `/api/sessions/[id]/processing/retry` | wav_admin | Retry failed job from last completed step |
+| GET | `/api/cron/check-uploads` | cron_secret | Vercel Cron: find uploaded sessions, dispatch |
+
+### Verbatims & Search
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/api/sessions/[id]/verbatims` | all roles | List verbatims (filterable by topic, participant, sentiment) |
+| GET | `/api/search` | all roles | Semantic search across all accessible verbatims |
+| POST | `/api/ask` | mg_client, wav_admin | RAG Q&A: free-form question, returns AI answer + citations |
+
+### Insights & Action Plans
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/api/sessions/[id]/keypoints` | all roles | Session keypoints |
+| GET | `/api/sessions/[id]/action-plans` | all roles | Session action plans |
+| PATCH | `/api/action-plans/[id]` | mg_client, wav_admin | Update action plan status (pending/in-progress/done) |
+| GET | `/api/trends` | mg_client, wav_admin | Cross-session trend data |
+
+### Export
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/sessions/[id]/export/pdf` | all roles | Generate PDF report (bilingual) |
+| GET | `/api/sessions/[id]/export/csv` | all roles | Download CSV of verbatims |
+
+### Admin
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/api/admin/users` | wav_admin | List all users |
+| POST | `/api/admin/users` | wav_admin | Invite user (sends email) |
+| PATCH | `/api/admin/users/[id]` | wav_admin | Update role, assign sessions |
+| POST | `/api/admin/users/[id]/sessions` | wav_admin | Assign sessions to moderator |
+
+---
+
+## 11. Authentication Flow
+
+### Login method
+
+Supabase Auth with **magic link** (email-based, passwordless). No passwords to manage.
+
+### Role assignment
+
+1. WAV Admin creates user via `/admin/users` → specifies role (mg_client or moderator)
+2. Supabase Auth invitation email sent with magic link
+3. On first login, user's `role` and `organization` are set in `auth.users` metadata
+4. RLS policies read `auth.jwt() -> 'user_metadata' ->> 'role'` for access control
+
+### Session verification in API routes
+
+```
+// Every API route:
+1. Extract JWT from Authorization header (Supabase client handles this)
+2. Verify JWT signature (Supabase middleware)
+3. Read role from user_metadata
+4. RLS enforces data access at DB layer
+5. API route checks role for write operations
+```
+
+### Moderator session assignment
+
+Join table `user_sessions(user_id, session_id)` — WAV Admin assigns via UI. RLS policy: moderator can SELECT from sessions/verbatims WHERE session_id IN (SELECT session_id FROM user_sessions WHERE user_id = auth.uid()).
+
+---
+
+## 12. Error Handling & Recovery
+
+### Pipeline failure strategy
+
+| Scenario | Behavior |
+|----------|----------|
+| Step fails (transient) | Auto-retry 3 times with exponential backoff (1s, 5s, 25s) |
+| Step fails (permanent) | Mark ProcessingJob as `failed`, record `failed_step` + `error_message` |
+| Admin sees failure | Dashboard shows which step failed + error. "Retry" button retries from `failed_step`, not from start |
+| External API down (ElevenLabs, AI Gateway) | Retry with backoff. After 3 retries, mark failed. Admin can retry later. |
+| Partial progress | Each completed step saves results to DB. Retry resumes from last completed step — no duplicate work |
+
+### ProcessingJob status flow
+
+```
+queued → running → completed
+                 ↘ failed → (admin retries) → running → ...
+```
+
+### Data model addition
+
+Add `failed_step` (nullable int) and `last_completed_step` (int, default 0) to ProcessingJob entity.
+
+### Frontend error states
+
+- **Upload failed**: retry button, show which file failed
+- **Processing failed**: show step name + error message + retry CTA
+- **Search/Ask timeout**: "Taking longer than expected, please try again"
+- **Media streaming error**: fallback to download link
+
+### Fallback behavior
+
+| Service down | Fallback |
+|-------------|----------|
+| ElevenLabs | Switch to Deepgram adapter (auto or manual) |
+| AI Gateway | Queue enrichment for later, mark session as "partially processed" (transcripts available, no AI analysis yet) |
+| R2 | Uploads fail with retry prompt, existing streams use CDN cache |
+
+---
+
+## 13. Security
+
+### API security
+
+- **CORS**: restrict to dashboard domain only
+- **Rate limiting**: `/api/ask` limited to 20 requests/minute per user (LLM cost protection)
+- **CRON secret**: `CRON_SECRET` header verified on `/api/cron/*` routes
+- **Input sanitization**: free-form Q&A input sanitized before LLM prompt (prevent prompt injection)
+- **LLM prompt injection mitigation**: system prompt hardcoded, user input wrapped in delimiters, output validated
+
+### Storage security
+
+- **R2 bucket**: private, all access via presigned URLs with 1-hour expiry
+- **Presigned upload URLs**: scoped to specific key prefix (`/sessions/{id}/raw/`), max file size enforced
+- **Supabase Storage**: private bucket, access via Supabase auth tokens
+
+### Auth security
+
+- **Magic link expiry**: 1 hour
+- **Session duration**: 7 days with refresh
+- **RLS enforced on all tables**: even direct DB access respects roles
+- **No service role key on frontend**: all client operations use anon key + JWT
+
+### Upload security
+
+- R2 multipart uploads: `CreateMultipartUpload` → `UploadPart` (chunks) → `CompleteMultipartUpload`
+- Max file size: 50 GB per file (covers 360 4K video)
+- Allowed MIME types: video/mp4, audio/wav, audio/x-wav
+- File hash verification after upload completion
+
+---
+
+## 14. Environment Variables
+
+```
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Cloudflare R2
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET_NAME=
+R2_ACCOUNT_ID=
+R2_PUBLIC_URL=
+
+# Transcription (primary)
+ELEVENLABS_API_KEY=
+
+# Transcription (fallback)
+DEEPGRAM_API_KEY=
+
+# AI (via Vercel AI Gateway — OIDC preferred)
+# If not using AI Gateway OIDC:
+OPENAI_API_KEY=
+
+# Processing pipeline
+TRIGGER_DEV_API_KEY=
+TRIGGER_DEV_API_URL=
+
+# Vercel Cron
+CRON_SECRET=
+
+# App
+NEXT_PUBLIC_APP_URL=
+```
+
+---
+
+## 15. Testing Strategy
+
+| Type | Scope | Tools |
+|------|-------|-------|
+| **Unit** | Transcription adapters, sync offset calculation, topic classifier prompt, embedding generation | Vitest |
+| **Integration** | Upload flow (presigned URL → R2 → DB), pipeline step execution (mock APIs), RLS policies | Vitest + Supabase local |
+| **E2E** | Login → upload → process → view session → search → export PDF | Playwright |
+| **Pipeline** | Process a real 10-min audio sample through all 7 steps | Manual + CI |
+| **Load** | `/api/ask` with concurrent requests (rate limit verification) | k6 or artillery |
+| **A/B transcription** | Compare ElevenLabs vs Deepgram vs Whisper on real Chilean audio | Manual benchmark script |
+
+### Minimum coverage target: 80% on business logic (adapters, pipeline steps, RLS policies)
+
+---
+
+## 16. Database Indexes
+
+```sql
+-- Verbatim queries (most common)
+CREATE INDEX idx_verbatims_session ON verbatims(session_id);
+CREATE INDEX idx_verbatims_participant ON verbatims(participant_id);
+CREATE INDEX idx_verbatims_topic ON verbatims(topic);
+CREATE INDEX idx_verbatims_sentiment ON verbatims(sentiment);
+CREATE INDEX idx_verbatims_session_topic ON verbatims(session_id, topic);
+
+-- Vector similarity search (HNSW for pgvector)
+CREATE INDEX idx_verbatims_embedding ON verbatims
+  USING hnsw (embedding vector_cosine_ops)
+  WITH (m = 16, ef_construction = 64);
+
+-- Processing job lookups
+CREATE INDEX idx_processing_jobs_session ON processing_jobs(session_id);
+CREATE INDEX idx_processing_jobs_status ON processing_jobs(status);
+
+-- Moderator session assignment
+CREATE INDEX idx_user_sessions_user ON user_sessions(user_id);
+CREATE INDEX idx_user_sessions_session ON user_sessions(session_id);
+
+-- Media file lookups
+CREATE INDEX idx_media_files_session ON media_files(session_id);
+CREATE INDEX idx_media_files_type ON media_files(session_id, type);
+```
+
+---
+
+## 17. Monitoring & Observability
+
+- **Pipeline alerts**: notify WAV Admin (email) when ProcessingJob.status = 'failed'
+- **Step duration logging**: track each pipeline step duration to detect degradation
+- **R2 storage monitoring**: monthly report on storage growth vs budget
+- **API latency**: Vercel Analytics for endpoint response times
+- **LLM cost tracking**: AI Gateway built-in cost attribution per endpoint
+- **Uptime**: Vercel status + Supabase status monitored via simple health check cron
+
+---
+
+## 18. Build Phases
 
 | Phase | Scope | Depends on |
 |-------|-------|-----------|
@@ -421,7 +697,7 @@ React-pdf renders styled templates with MG branding. Stored in Supabase Storage.
 
 ---
 
-## 11. Cost Estimates (Annual)
+## 19. Cost Estimates (Annual)
 
 | Service | Monthly | Annual |
 |---------|---------|--------|
@@ -435,7 +711,7 @@ React-pdf renders styled templates with MG branding. Stored in Supabase Storage.
 
 ---
 
-## 12. Open Questions
+## 20. Open Questions
 
 1. **Transcription A/B test**: ElevenLabs Scribe vs Deepgram Nova-3 vs Whisper with real Chilean audio — must complete before P3
 2. **360 camera model**: Which camera will WAV use? File format affects transcode pipeline
