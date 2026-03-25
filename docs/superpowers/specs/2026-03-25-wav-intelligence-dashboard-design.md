@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-25
 **Author:** Federico Elgueta (WAV BTL) + Claude
-**Status:** Draft — pending review
+**Status:** Draft v2 — post architecture review
 
 ---
 
@@ -39,7 +39,7 @@ WAV Intelligence is a SaaS-like dashboard for the "Voice of MG" program. It inge
 | Transcription | ElevenLabs Scribe (primary) | Best Chilean Spanish support (3.1% WER), $0.40/hr |
 | AI/LLM | Vercel AI Gateway | Topic classification, sentiment, RAG, translations, action plans |
 | Embeddings | OpenAI text-embedding-3-small | 1536-dim vectors stored in pgvector |
-| Processing pipeline | Trigger.dev (self-hosted on Railway) | Multi-step durable jobs, ffmpeg support, ~$5/mo |
+| Processing pipeline | Trigger.dev Cloud | Multi-step durable jobs, ffmpeg support, managed infra, ~$30/mo |
 | Video streaming | HLS.js + Video.js + videojs-vr | Adaptive bitrate, 360 panoramic viewer |
 | Audio waveforms | Peaks.js | Multi-track waveform visualization (BBC open-source) |
 | PDF generation | React-pdf | Branded bilingual reports |
@@ -56,15 +56,19 @@ VERCEL (Next.js 16)
     ┌────┴────────────────────────────┐
     │                                 │
     ▼                                 ▼
-Supabase                    Trigger.dev (Railway)
+Supabase                    Trigger.dev Cloud (managed)
   ├── Auth (3 roles + RLS)      └── process-session job
   ├── Postgres + pgvector            ├── transcode (ffmpeg)
-  └── Storage (small files)          ├── transcribe (ElevenLabs)
-                                     ├── analyze (AI Gateway)
-Cloudflare R2                        ├── embed (OpenAI)
-  └── /sessions/{id}/               └── finalize
+  │   └── verbatim_embeddings        ├── transcribe (ElevenLabs)
+  └── Storage (small files)          ├── analyze (AI Gateway)
+                                     ├── embed (OpenAI)
+Cloudflare R2                        └── finalize
+  └── /sessions/{id}/
        ├── raw/ (uploads)
        └── processed/ (HLS + peaks)
+
+Pipeline trigger: event-driven (upload-complete API dispatches job directly)
+                  + cron fallback every 5 min for missed dispatches
 ```
 
 ### Relationship to existing proposal site
@@ -111,7 +115,11 @@ Verbatim
   └── id, session_id (FK), participant_id (FK)
   └── text, start_ts, end_ts
   └── topic (enum), sentiment (enum), sentiment_score (float)
+
+VerbatimEmbedding (separate table for model-agnostic embeddings)
+  └── id, verbatim_id (FK), model_name, dimensions
   └── embedding (vector(1536))
+  └── created_at
 
 Keypoint
   └── id, session_id (FK), topic
@@ -240,13 +248,31 @@ The core UI component. All media for a session plays in sync.
 └──────────────────────────────────────────────────┘
 ```
 
-### Sync engine
+### Sync engine (detailed architecture)
 
-- Shared `currentTime` state managed in React
-- 360 video is the master clock
-- Audio tracks offset by `sync_offset_ms` (calculated during processing)
-- Scrubbing any element updates all others
-- Active speaker detected from audio amplitude of each mic track
+**Master clock:** The 360 video is the time reference. All other tracks derive their position from it.
+
+**Track state machine (per media element):**
+```
+idle → loading → buffered → playing → seeking → buffered → playing
+                                    ↘ stalled → buffered (auto-resume)
+```
+
+**Sync coordinator:**
+- Maintains shared `currentTime` state in React context
+- On scrub: pauses master → seeks all tracks → waits until all report `buffered` → resumes master
+- On stall: if any track stalls, coordinator pauses master clock until stalled track recovers
+- On seek completion: tolerance of ±100ms (imperceptible for speech content)
+
+**Audio offset:** Each track offset by `sync_offset_ms` (calculated during processing via cross-correlation of ambient sound captured by all mics, or manual clap marker detection)
+
+**Active speaker detection:** Real-time RMS amplitude comparison across 13 audio tracks. Highest RMS above threshold = active speaker. Debounce 300ms to avoid flickering.
+
+**Performance optimization:**
+- Only render waveforms for tracks visible in the scrollable viewport
+- Lazy-load 360° WebGL viewer (three.js) — initialize only when 360° tab is active
+- Audio tracks use Web Audio API for amplitude monitoring without full decode
+- Virtualize participant waveform list for sessions with many participants
 
 ### Speaker identification (audio-first, no facial recognition)
 
@@ -289,12 +315,18 @@ Implementations: `elevenlabs-scribe.ts` (primary), `deepgram-nova3.ts` (fallback
 
 **Mandatory before production:** A/B test with 10 minutes of real January 2026 focus group audio across all three providers. The winner becomes the default.
 
-### Pipeline trigger
+### Pipeline trigger (event-driven + cron fallback)
 
-- Vercel Cron runs every 5 minutes: `GET /api/cron/check-uploads`
-- Finds sessions with `status = 'uploaded'`
-- Dispatches `process-session` job to Trigger.dev via SDK
-- Dashboard polls `ProcessingJob` table for real-time status
+**Primary (event-driven):** When WAV Admin completes upload and clicks "Process Session":
+1. `POST /api/sessions/[id]/upload-complete` saves MediaFile records
+2. `POST /api/sessions/[id]/process` dispatches Trigger.dev job immediately
+3. Zero latency — processing starts within seconds of upload completion
+
+**Fallback (cron safety net):** Vercel Cron runs every 5 minutes: `GET /api/cron/check-uploads`
+- Finds sessions with `status = 'uploaded'` that have no ProcessingJob
+- Dispatches missed jobs (handles edge cases: browser crash, network error after upload)
+
+**Status polling:** Dashboard polls `ProcessingJob` table for real-time progress bar
 
 ---
 
@@ -496,8 +528,10 @@ Supabase Auth with **magic link** (email-based, passwordless). No passwords to m
 
 1. WAV Admin creates user via `/admin/users` → specifies role (mg_client or moderator)
 2. Supabase Auth invitation email sent with magic link
-3. On first login, user's `role` and `organization` are set in `auth.users` metadata
-4. RLS policies read `auth.jwt() -> 'user_metadata' ->> 'role'` for access control
+3. On creation, user's `role` and `organization` are set in `auth.users.app_metadata` (admin-only, NOT `user_metadata` which users can self-modify)
+4. RLS policies read `auth.jwt() -> 'app_metadata' ->> 'role'` for access control
+
+**CRITICAL:** Role MUST be stored in `app_metadata`, never `user_metadata`. Users can modify their own `user_metadata` via `supabase.auth.updateUser()`, which would allow role escalation.
 
 ### Session verification in API routes
 
@@ -505,7 +539,7 @@ Supabase Auth with **magic link** (email-based, passwordless). No passwords to m
 // Every API route:
 1. Extract JWT from Authorization header (Supabase client handles this)
 2. Verify JWT signature (Supabase middleware)
-3. Read role from user_metadata
+3. Read role from app_metadata (admin-only writable, immune to user self-modification)
 4. RLS enforces data access at DB layer
 5. API route checks role for write operations
 ```
@@ -571,6 +605,13 @@ Add `failed_step` (nullable int) and `last_completed_step` (int, default 0) to P
 - **R2 bucket**: private, all access via presigned URLs with 1-hour expiry
 - **Presigned upload URLs**: scoped to specific key prefix (`/sessions/{id}/raw/`), max file size enforced
 - **Supabase Storage**: private bucket, access via Supabase auth tokens
+
+### Database backup
+
+- **Supabase PITR**: Point-in-time recovery enabled (included in Pro plan)
+- **Weekly pg_dump**: Cron job exports full database dump to R2 bucket (`wav-intelligence-backups/`)
+- **Retention**: 30 days of weekly backups, then monthly for 12 months
+- **Recovery procedure**: documented in runbook (restore from PITR for <7 days, pg_dump for older)
 
 ### Auth security
 
@@ -651,8 +692,9 @@ CREATE INDEX idx_verbatims_topic ON verbatims(topic);
 CREATE INDEX idx_verbatims_sentiment ON verbatims(sentiment);
 CREATE INDEX idx_verbatims_session_topic ON verbatims(session_id, topic);
 
--- Vector similarity search (HNSW for pgvector)
-CREATE INDEX idx_verbatims_embedding ON verbatims
+-- Vector similarity search (HNSW for pgvector, separate table)
+CREATE INDEX idx_verbatim_embeddings_verbatim ON verbatim_embeddings(verbatim_id);
+CREATE INDEX idx_verbatim_embeddings_vector ON verbatim_embeddings
   USING hnsw (embedding vector_cosine_ops)
   WITH (m = 16, ef_construction = 64);
 
@@ -704,10 +746,10 @@ CREATE INDEX idx_media_files_type ON media_files(session_id, type);
 | Vercel (Pro) | $20 | $240 |
 | Supabase (Pro) | $25 | $300 |
 | Cloudflare R2 (~1.7 TB) | ~$25 | ~$300 |
-| Railway (Trigger.dev host) | ~$5 | ~$60 |
+| Trigger.dev Cloud | ~$30 | ~$360 |
 | ElevenLabs Scribe (36 sessions) | — | ~$375 |
 | AI Gateway (LLM + embeddings) | — | ~$180 |
-| **Total** | | **~$1,455/yr** |
+| **Total** | | **~$1,755/yr** |
 
 ---
 
@@ -718,7 +760,7 @@ CREATE INDEX idx_media_files_type ON media_files(session_id, type);
 3. **Sync method**: Clap/marker at session start? Timecode? Manual alignment?
 4. **MG branding approval**: Can we use Favorit/Heatwood fonts in the dashboard (licensing)?
 5. **Notification preferences**: Email only? In-app? WhatsApp?
-6. **Data retention**: How long to keep raw media in R2? Archive policy?
+6. **Data retention policy (proposed)**: Keep raw media in R2 for 24 months, then archive to R2 Infrequent Access tier. Processed HLS/peaks kept indefinitely (much smaller). Confirm with MG whether they need raw files beyond 2 years.
 
 ---
 
